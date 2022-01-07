@@ -1,0 +1,53 @@
+@mixin transition($t) {
+  transition: $t 250ms ease-in-out 50ms;
+}
+
+@mixin icon-with-update-mark($icon-base-width) {
+  .icon {
+    width: $icon-base-width;
+
+    &.has-update-mark:after {
+      right: calc($icon-base-width / 2) - 0.85;
+    }
+  }
+}
+
+@mixin tabs {
+  & {
+    .tabs {
+      margin-bottom: 1.5rem;
+      padding-top: 0.5rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      background-color: white;
+
+      ul {
+        border-bottom-width: 0;
+        li {
+          a {
+            border-bottom-width: 0;
+
+            span {
+              color: #939393;
+            }
+          }
+          &.is-active {
+            a {
+              border-bottom-color: #ef4a81;
+              border-bottom-width: 2px;
+
+              span {
+                color: #ef4a81;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .tab-content {
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
+    }
+  }
+}

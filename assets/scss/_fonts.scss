@@ -1,0 +1,111 @@
+/* Roboto */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Roboto'),
+       url(~assets/fonts/roboto/Roboto-Light.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Roboto'),
+       url(~assets/fonts/roboto/Roboto-LightItalic.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto'),
+       url(~assets/fonts/roboto/Roboto-Regular.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Roboto'),
+       url(~assets/fonts/roboto/Roboto-Medium.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 500;
+  src: local('Roboto'),
+       url(~assets/fonts/roboto/Roboto-MediumItalic.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto'),
+       url(~assets/fonts/roboto/Roboto-Bold.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Roboto'),
+       url(~assets/fonts/roboto/Roboto-BoldItalic.ttf) format('truetype');
+  font-display: swap;
+}
+
+
+/* Quicksand */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Quicksand'),
+       url(~assets/fonts/quicksand/Quicksand-Light.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Quicksand'),
+       url(~assets/fonts/quicksand/Quicksand-Regular.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Quicksand'),
+       url(~assets/fonts/quicksand/Quicksand-Medium.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Quicksand'),
+       url(~assets/fonts/quicksand/Quicksand-SemiBold.ttf) format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Quicksand'),
+       url(~assets/fonts/quicksand/Quicksand-Bold.ttf) format('truetype');
+  font-display: swap;
+}
+
