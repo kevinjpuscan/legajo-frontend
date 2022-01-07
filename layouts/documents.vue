@@ -23,7 +23,7 @@
       <template #end>
         <b-navbar-item tag="div">
           <div class="buttons">
-            <a class="button is-light"> Salir </a>
+            <Button type="is-light" @click="salir"> Salir </Button>
           </div>
         </b-navbar-item>
       </template>
@@ -56,9 +56,12 @@
 
 <script>
 import Menu from "~/components/molecules/Menu.vue";
+import Button from "~/components/shared/Button.vue";
 export default {
+  middleware: "auth",
   components: {
     Menu,
+    Button,
   },
   data() {
     return {
@@ -66,7 +69,7 @@ export default {
       items: [
         {
           title: "Servidores Públicos",
-          to: { name: "/inicio" },
+          to: { name: "/" },
         },
         {
           title: "Rotaciones",
@@ -91,6 +94,9 @@ export default {
     toogleMenu() {
       console.log("entro");
       this.open = !this.open;
+    },
+    salir() {
+      this.$router.push("/salir");
     },
   },
 };

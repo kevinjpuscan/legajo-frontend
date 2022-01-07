@@ -23,7 +23,7 @@
       <template #end>
         <b-navbar-item tag="div">
           <div class="buttons">
-            <a class="button is-light"> Salir </a>
+            <Button type="is-light" @click="salir"> Salir </Button>
           </div>
         </b-navbar-item>
       </template>
@@ -36,13 +36,18 @@
 </template>
 
 <script>
+import Button from "~/components/shared/Button.vue";
 export default {
+  middleware: "auth",
+  components: {
+    Button,
+  },
   data() {
     return {
       items: [
         {
           title: "Servidores Públicos",
-          to: { name: "/inicio" },
+          to: { name: "/" },
         },
         {
           title: "Rotaciones",
@@ -62,6 +67,11 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    salir() {
+      this.$router.push("/salir");
+    },
   },
 };
 </script>

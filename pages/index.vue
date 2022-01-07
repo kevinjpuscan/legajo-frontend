@@ -1,97 +1,202 @@
 <template>
-<div class="container-page">
-<div class="login-container">
-    <div class="login-header">
-      <h1>
-      MUNICIPALIDAD PROVINCIAL DE CHOTA
-      </h1>
-      <h2>
-        Sistema de Legajo
-      </h2>
-    </div>
-    <form id="login-form" @submit.prevent="submit">
-    <b-field :label="Correo">
-      <b-field>
+  <Wrapper>
+    <section class="actions">
+      <div>
+        <Button>Agregar Servidor Público</Button>
+      </div>
+      <div class="action-search">
         <b-input
-          v-model="form.identifier"
-          icon="email-outline"
-          type="email"
-          placeholder="example@example.com"
-          name="email"
-          required
+          icon="account-search"
+          type="text"
+          placeholder="Buscar por nombre, DNI o cargo"
+          name="search"
         />
-      </b-field>
-    </b-field>
-    <b-field :label="Contraseña">
-      <b-field>
-        <b-input
-          v-model="form.password"
-          icon="lock-outline"
-          password-reveal
-          type="password"
-          placeholder="****"
-          name="password"
-          required
+      </div>
+    </section>
+
+    <section class="elements">
+      <div class="element">
+        <WorkerCard
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
         />
-      </b-field>
-    </b-field>
-    <b-field>
-      <b-field grouped>
-        <div class="control">
-          <Button native-type="submit" type="is-primary">
-            Iniciar Sesión</Button
-          >
-        </div>
-      </b-field>
-    </b-field>
-  </form>
-</div>
-</div>
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
+        />
+      </div>
+    </section>
+
+    <section class="pagination">
+      <b-pagination
+        v-model="currentPage"
+        :range-before="rangeBefore"
+        :range-after="rangeAfter"
+        :order="order"
+        :size="size"
+        :simple="isSimple"
+        :rounded="isRounded"
+        :per-page="perPage"
+        :icon-prev="prevIcon"
+        :icon-next="nextIcon"
+        aria-next-label="Next page"
+        aria-previous-label="Previous page"
+        aria-page-label="Page"
+        aria-current-label="Current page"
+      >
+      </b-pagination>
+    </section>
+  </Wrapper>
 </template>
 
 <script>
-import Button from '~/components/shared/Button.vue'
+import Wrapper from "~/components/containers/Wrapper.vue";
+import Button from "~/components/shared/Button.vue";
+import WorkerCard from "~/components/molecules/WorkerCard.vue";
+
 export default {
-  layout: "empty",
-  components:{
+  name: "HomePage",
+
+  components: {
+    Wrapper,
     Button,
+    WorkerCard,
   },
-  data:()=>({
-    form:{identifier:'',password:''}
+  data: () => ({
+    currentPage: 1,
   }),
-  methods:{
-    submit(){
-      console.log('enviar');
+  async fetch() {
+    console.log(this.$repository.user);
+    const data = await this.$repository.user.findOne(1);
+    console.log(data);
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "assets/scss/_theme-default";
+.actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0 1rem 0;
+
+  @media screen and (min-width: $breakpoint-mobile) {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 3rem 0 1.5rem 0;
+  }
+  .action-search {
+    width: 400px;
+    max-width: 95%;
+    margin-top: 0.5rem;
+    @media screen and (min-width: $breakpoint-mobile) {
+      margin-top: 0;
     }
   }
 }
-</script>
 
+.elements {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
 
-<style lang="scss" scoped>
-@import 'assets/scss/_theme-default';
-.container-page{
-  min-height: 100vh;
-  display: flex;
+.element {
+  grid-column: span 2;
+}
+
+.pagination {
   justify-content: center;
-  align-items: center;
-  .login-container{
-    padding: 1rem 2rem;
-    box-shadow: $navbar-box-shadow;
-    max-width: 400px;
-    width: 95%;
-    margin: auto;
-
-    .login-header{
-      width: 100%;
-      padding: 1rem 0;
-      text-align: center;
-      color: $primary;
-      h1{
-        font-weight: bold;
-      
-      }
-    }
-  }
+  padding: 1rem 0;
 }
 </style>
