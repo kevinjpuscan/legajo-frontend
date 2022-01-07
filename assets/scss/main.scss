@@ -1,0 +1,247 @@
+/* Fonts */
+@import 'fonts';
+
+/* Theme style (colors & sizes) */
+@import 'theme-default';
+
+/* Core Libs & Lib configs */
+@import 'libs/all';
+
+/* Mixins */
+@import 'mixins';
+
+/* Theme components */
+@import 'nav-bar';
+@import 'aside';
+@import 'title-bar';
+@import 'hero-bar';
+@import 'card';
+@import 'table';
+@import 'tiles';
+@import 'form';
+@import 'main-section';
+@import 'modal';
+@import 'footer';
+@import 'misc';
+
+/* Animate.css custom build (just selected animations to minimize bundle size) */
+@import '../css/animate.min.css';
+
+html {
+  background-color: $body-background-color !important;
+}
+
+#app {
+  background-color: $body-background-color !important;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.flex-all-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tab-content {
+  padding: 0 !important;
+}
+
+button.is-secondary {
+  background-color: $secondary;
+  color: $text-secondary;
+  border-color: $secondary-dark;
+
+  &:hover {
+    background-color: $secondary-dark;
+    color: $text-secondary;
+  }
+}
+
+button.is-tertiary {
+  background-color: $tertiary;
+  color: $text-tertiary;
+  border-color: $tertiary-dark;
+
+  &:hover {
+    background-color: $tertiary-dark;
+    color: $text-tertiary;
+  }
+}
+* {
+  page-break-before: always;
+  page-break-after: always;
+  page-break-inside: initial;
+}
+button.is-danger {
+  background-color: $danger;
+}
+ul.hierarchiesSkills {
+  page-break-before: always;
+  page-break-after: always;
+  page-break-inside: initial;
+  li {
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-size: 22px;
+    page-break-before: always;
+    page-break-after: always;
+    page-break-inside: initial;
+  }
+  i {
+    page-break-before: always;
+    page-break-after: always;
+    page-break-inside: initial;
+    font-size: 16px;
+    margin-right: 0.2em;
+  }
+}
+
+.indicator-grey .carousel-indicator .indicator-item .indicator-style.is-dots {
+  border: 1px solid $secondary;
+}
+
+.indicator-grey
+  .carousel
+  .carousel-indicator
+  .indicator-item.is-active
+  .indicator-style,
+.carousel .carousel-indicator .indicator-item .indicator-style:hover {
+  border: none;
+  background: $secondary;
+}
+
+.multiselect.is-danger > .multiselect__tags {
+  border: 1px solid red;
+}
+
+.multiselect.is-success > .multiselect__tags {
+  border: 1px solid #00973a;
+}
+
+.control {
+  .select:not(.is-multiple):not(.is-loading)::after {
+    border-color: #dbdbdb;
+  }
+
+  &.is-focused,
+  &:focus {
+    .select:not(.is-multiple):not(.is-loading)::after {
+      border-color: #253746;
+    }
+  }
+}
+
+.label-gray {
+  font-size: 14px;
+  line-height: 14px;
+  color: $grey;
+}
+
+.has-shadow {
+  filter: drop-shadow(0 10px 20px rgba(50, 50, 71, 0.05));
+}
+
+.b-table {
+  .table {
+    td {
+      vertical-align: middle;
+    }
+
+    &.is-hoverable {
+      tbody tr {
+        &:hover {
+          cursor: pointer;
+        }
+
+        &.detail {
+          &:hover,
+          *:hover {
+            cursor: auto;
+          }
+        }
+      }
+    }
+  }
+
+  &.bordered-horizontal {
+    .table {
+      tr {
+        th,
+        &:not(:last-child) td {
+          border-bottom-color: #ebebeb;
+          border-bottom-width: 2px;
+        }
+      }
+    }
+  }
+}
+
+.button.is-danger.is-light:disabled {
+  background-color: #feecf0;
+  color: #cc0f35;
+}
+
+
+@-moz-document url-prefix() {
+  .buttons,
+  .columns.is-multiline,
+  .pagination-list
+  {
+    flex-wrap: nowrap;
+    @media only screen and (max-width: $breakpoint-mobile) {
+      flex-wrap: wrap;
+    }
+  } 
+
+  .breadcrumb ul{
+    flex-wrap: nowrap;
+  }
+
+  .pagination{
+    @media only screen and (max-width: $breakpoint-mobile) {
+      flex-wrap: nowrap;
+    }
+  }
+  .steps .step-items,
+  .invitation-selection-button
+  {
+    flex-wrap: nowrap !important;
+    @media only screen and (max-width: $breakpoint-mobile) {
+      flex-wrap: wrap;
+    }
+  } 
+}
+
+.progress-indicator {
+  display: none;
+}
+
+.mobile-progress-indicator {
+  display: block;
+}
+
+@media screen and (min-width: 530px) {
+  .progress-indicator {
+    display: flex;
+  }
+
+  .mobile-progress-indicator {
+    display: none;
+  }
+}
+
+.px-custom-2rem{
+  padding:0 6rem
+}
+
+.ck-editor__editable{
+  padding-left: 1.8rem !important;
+}
+.ck-content{
+  ul{
+    list-style: outside;
+  }
+}

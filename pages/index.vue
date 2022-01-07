@@ -1,53 +1,97 @@
 <template>
-  <section class="section">
-    <div class="columns is-mobile">
-      <card
-        title="Free"
-        icon="github"
-      >
-        Open source on <a href="https://github.com/buefy/buefy">
-          GitHub
-        </a>
-      </card>
-
-      <card
-        title="Responsive"
-        icon="cellphone-link"
-      >
-        <b class="has-text-grey">
-          Every
-        </b> component is responsive
-      </card>
-
-      <card
-        title="Modern"
-        icon="alert-decagram"
-      >
-        Built with <a href="https://vuejs.org/">
-          Vue.js
-        </a> and <a href="http://bulma.io/">
-          Bulma
-        </a>
-      </card>
-
-      <card
-        title="Lightweight"
-        icon="arrange-bring-to-front"
-      >
-        No other internal dependency
-      </card>
+<div class="container-page">
+<div class="login-container">
+    <div class="login-header">
+      <h1>
+      MUNICIPALIDAD PROVINCIAL DE CHOTA
+      </h1>
+      <h2>
+        Sistema de Legajo
+      </h2>
     </div>
-  </section>
+    <form id="login-form" @submit.prevent="submit">
+    <b-field :label="Correo">
+      <b-field>
+        <b-input
+          v-model="form.identifier"
+          icon="email-outline"
+          type="email"
+          placeholder="example@example.com"
+          name="email"
+          required
+        />
+      </b-field>
+    </b-field>
+    <b-field :label="Contraseña">
+      <b-field>
+        <b-input
+          v-model="form.password"
+          icon="lock-outline"
+          password-reveal
+          type="password"
+          placeholder="****"
+          name="password"
+          required
+        />
+      </b-field>
+    </b-field>
+    <b-field>
+      <b-field grouped>
+        <div class="control">
+          <Button native-type="submit" type="is-primary">
+            Iniciar Sesión</Button
+          >
+        </div>
+      </b-field>
+    </b-field>
+  </form>
+</div>
+</div>
 </template>
 
 <script>
-import Card from '~/components/Card'
-
+import Button from '~/components/shared/Button.vue'
 export default {
-  name: 'HomePage',
-
-  components: {
-    Card
+  layout: "empty",
+  components:{
+    Button,
+  },
+  data:()=>({
+    form:{identifier:'',password:''}
+  }),
+  methods:{
+    submit(){
+      console.log('enviar');
+    }
   }
 }
 </script>
+
+
+<style lang="scss" scoped>
+@import 'assets/scss/_theme-default';
+.container-page{
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .login-container{
+    padding: 1rem 2rem;
+    box-shadow: $navbar-box-shadow;
+    max-width: 400px;
+    width: 95%;
+    margin: auto;
+
+    .login-header{
+      width: 100%;
+      padding: 1rem 0;
+      text-align: center;
+      color: $primary;
+      h1{
+        font-weight: bold;
+      
+      }
+    }
+  }
+}
+</style>
