@@ -44,8 +44,10 @@
         <div :class="`menu-container ${open ? 'open' : 'close'}`">
           <Menu />
         </div>
-        <div>
-          <Nuxt />
+        <div class="page">
+          <div class="content-page">
+            <Nuxt />
+          </div>
         </div>
       </div>
     </section>
@@ -149,6 +151,15 @@ export default {
   .collapse-icon {
     transform: rotate(180deg);
     transition: 0.5s;
+  }
+}
+
+.page {
+  overflow-x: hidden;
+
+  .content-page {
+    width: 100%;
+    min-width: 400px;
   }
 }
 </style>
