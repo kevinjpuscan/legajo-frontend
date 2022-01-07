@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading-spinner v-if="$store.state.loading" />
     <b-navbar class="navbar-main">
       <template #brand>
         <b-navbar-item
@@ -57,11 +58,13 @@
 <script>
 import Menu from "~/components/molecules/Menu.vue";
 import Button from "~/components/shared/Button.vue";
+import LoadingSpinner from "~/components/shared/LoadingSpinner.vue";
 export default {
   middleware: "auth",
   components: {
     Menu,
     Button,
+    LoadingSpinner,
   },
   data() {
     return {

@@ -6,133 +6,35 @@
       </div>
       <div class="action-search">
         <b-input
+          v-model="searchText"
           icon="account-search"
           type="text"
-          placeholder="Buscar por nombre, DNI o cargo"
+          placeholder="Buscar por nombre o DNI"
           name="search"
         />
       </div>
     </section>
 
     <section class="elements">
-      <div class="element">
-        <WorkerCard
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
+      <div class="element" v-for="(worker, index) in workers" :key="index">
         <WorkerCard
           image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
-          :is-large="true"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
+          :names="`${worker.first_names} ${worker.last_names}`"
+          :job-position="jobPosition(worker)"
+          :area="area(worker)"
+          :id="worker.id"
           :is-large="true"
         />
       </div>
     </section>
 
     <section class="pagination">
-      <b-pagination
-        v-model="currentPage"
-        :range-before="rangeBefore"
-        :range-after="rangeAfter"
-        :order="order"
-        :size="size"
-        :simple="isSimple"
-        :rounded="isRounded"
-        :per-page="perPage"
-        :icon-prev="prevIcon"
-        :icon-next="nextIcon"
-        aria-next-label="Next page"
-        aria-previous-label="Previous page"
-        aria-page-label="Page"
-        aria-current-label="Current page"
-      >
-      </b-pagination>
+      <Pagination
+        :current-page="Number(currentPage)"
+        :route-base="`?search=${searchText}&page=`"
+        :has-more-next="workers.length === perPage"
+        :has-more-preview="currentPage > 1"
+      />
     </section>
   </Wrapper>
 </template>
@@ -141,6 +43,7 @@
 import Wrapper from "~/components/containers/Wrapper.vue";
 import Button from "~/components/shared/Button.vue";
 import WorkerCard from "~/components/molecules/WorkerCard.vue";
+import Pagination from "~/components/shared/Pagination.vue";
 
 export default {
   name: "HomePage",
@@ -149,14 +52,51 @@ export default {
     Wrapper,
     Button,
     WorkerCard,
+    Pagination,
   },
   data: () => ({
+    workers: [],
+    searchText: "",
     currentPage: 1,
+    perPage: 15,
   }),
+  computed: {
+    filters() {
+      return {
+        populate: ["job_position", "job_position.organizational_unit"],
+        _where: {
+          _or: [
+            { first_names_contains: this.searchText },
+            { last_names_contains: this.searchText },
+            { identification_number_contains: this.searchText },
+          ],
+        },
+        _limit: this.perPage,
+        _start: (this.currentPage - 1) * this.perPage,
+      };
+    },
+  },
   async fetch() {
-    console.log(this.$repository.user);
-    const data = await this.$repository.user.findOne(1);
-    console.log(data);
+    const { page, search } = this.$route.query;
+    this.currentPage = page || 1;
+    this.searchText = search || "";
+    this.workers = await this.fetchWorkers();
+  },
+  methods: {
+    async fetchWorkers() {
+      return this.$repository.worker.find(this.filters);
+    },
+    area(worker) {
+      return worker.job_position?.organizational_unit?.name;
+    },
+    jobPosition(worker) {
+      return worker.job_position?.title;
+    },
+  },
+  watch: {
+    async searchText() {
+      this.workers = await this.fetchWorkers();
+    },
   },
 };
 </script>

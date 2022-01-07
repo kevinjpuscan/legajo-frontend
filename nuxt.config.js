@@ -9,7 +9,8 @@ export default {
   head: {
     title: 'legajo-frontend',
     htmlAttrs: {
-      lang: 'en'
+      translate: 'no',
+      lang: 'es',
     },
     meta: [
       { charset: 'utf-8' },
@@ -45,13 +46,29 @@ export default {
     // https://go.nuxtjs.dev/buefy
     'nuxt-buefy',
     '@nuxtjs/strapi',
+    'nuxt-i18n',
   ],
   strapi: {
     entities: [
       'users',
+      'workers',
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
+  },
+  i18n: {
+    seo: false,
+    locales: [
+      {
+        code: 'es',
+        iso: 'es-ES',
+        file: 'es.js',
+      },
+    ],
+    lazy: true,
+    langDir: 'lang/',
+    defaultLocale: 'es',
+  },
+  loadingIndicator: '~/template/loading.html',
 }
