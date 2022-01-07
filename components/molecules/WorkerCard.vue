@@ -1,6 +1,6 @@
 <template>
   <nuxt-link :to="`/workers/${id}`">
-    <div class="worker-card" @click="redirect">
+    <div class="worker-card">
       <div class="worker-image">
         <figure class="media-left">
           <p class="image is-64x64">
@@ -69,10 +69,11 @@ export default {
   cursor: pointer;
 }
 .worker-card {
-  padding: 1.5rem 1rem;
+  padding: 0.5rem 1rem;
   box-shadow: $navbar-box-shadow;
   border-radius: 5px;
   display: flex;
+  background: $white;
 
   .worker-image {
     display: flex;

@@ -175,15 +175,6 @@ export default {
   }
 }
 
-.elementss {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  @media screen and (min-width: $breakpoint-mobile) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 .elements {
   display: grid;
   gap: 1.5rem;
