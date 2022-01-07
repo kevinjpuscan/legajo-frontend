@@ -21,6 +21,7 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -30,6 +31,7 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -38,15 +40,7 @@
           job-position="Ing. de Sistemas"
           area="Area de Sistemas"
           id="5"
-        />
-      </div>
-      <div class="element">
-        <WorkerCard
-          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
-          job-position="Ing. de Sistemas"
-          names="Juan Perez Chavez"
-          area="Area de Sistemas"
-          id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -56,6 +50,7 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -65,6 +60,7 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -74,6 +70,7 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -83,6 +80,7 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -92,6 +90,7 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
         />
       </div>
       <div class="element">
@@ -101,6 +100,17 @@
           names="Juan Perez Chavez"
           area="Area de Sistemas"
           id="5"
+          :is-large="true"
+        />
+      </div>
+      <div class="element">
+        <WorkerCard
+          image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
+          job-position="Ing. de Sistemas"
+          names="Juan Perez Chavez"
+          area="Area de Sistemas"
+          id="5"
+          :is-large="true"
         />
       </div>
     </section>

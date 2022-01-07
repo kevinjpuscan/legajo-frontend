@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link to="/workers/1/seccions/1">
+  <nuxt-link to="/workers/1/sections/1">
     <div class="item-menu">
       <div class="item-icon">
         <figure>

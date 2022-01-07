@@ -1,6 +1,6 @@
 <template>
   <nuxt-link :to="`/workers/${id}`">
-    <div class="worker-card">
+    <div :class="`worker-card ${isLarge && 'large'}`">
       <div class="worker-image">
         <figure class="media-left">
           <p class="image is-64x64">
@@ -58,6 +58,10 @@ export default {
       type: Number,
       default: 0,
     },
+    isLarge: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -67,6 +71,9 @@ export default {
 
 .worker-card:hover {
   cursor: pointer;
+}
+.worker-card.large {
+  padding: 1.5rem 1rem;
 }
 .worker-card {
   padding: 0.5rem 1rem;

@@ -92,13 +92,6 @@ export default {
   }
 }
 
-h1 {
-  font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
-  line-height: 120%;
-}
-
 .information-group {
   display: flex;
   flex-direction: column;

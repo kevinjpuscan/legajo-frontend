@@ -177,3 +177,11 @@ $colors: map-merge($colors, $addColors);
 .color-tertiary{
   color:$tertiary;
 }
+
+
+h1 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 120%;
+}
