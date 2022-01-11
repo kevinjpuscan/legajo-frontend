@@ -8,7 +8,7 @@
     >
       <ValidationObserver v-slot="{ handleSubmit, invalid }" tag="form" slim>
         <ModalWithTitleBar title="Nuevo Servidor Público" :close="close">
-          <Wrapper>
+          <Wrapper type="sm">
             <form style="padding: 3rem 0">
               <FormInput
                 v-model="form.identification_number"
@@ -41,7 +41,6 @@
                 :max-date="new Date()"
                 trap-focus
                 editable
-                position="is-bottom-right"
               />
             </form>
           </Wrapper>

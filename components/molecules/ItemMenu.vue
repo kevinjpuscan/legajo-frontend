@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link to="/workers/1/sections/1">
+  <nuxt-link :to="`/workers/${workerId}/sections/${sectionId}`">
     <div class="item-menu">
       <div class="item-icon">
         <figure>
@@ -22,6 +22,14 @@
 <script>
 export default {
   props: {
+    sectionId: {
+      type: Number,
+      default: () => 1,
+    },
+    workerId: {
+      type: Number,
+      default: () => 1,
+    },
     title: {
       type: String,
       default: "Sección #",

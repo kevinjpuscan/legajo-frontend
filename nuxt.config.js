@@ -52,6 +52,7 @@ export default {
     entities: [
       'users',
       'workers',
+      'sections',
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build

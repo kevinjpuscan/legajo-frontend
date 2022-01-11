@@ -43,7 +43,7 @@
           />
         </div>
         <div :class="`menu-container ${open ? 'open' : 'close'}`">
-          <Menu />
+          <Menu :worker="currentWorker" :sections="sections" />
         </div>
         <div class="page">
           <div class="content-page">
@@ -91,9 +91,26 @@ export default {
           to: { name: "/reportes" },
         },
       ],
+      currentWorker: {},
+      sections: [],
     };
   },
+  mounted() {
+    const { worker } = this.$route.params;
+    this.fetchWorker(worker);
+    this.fetchSections();
+  },
   methods: {
+    async fetchWorker(workerId) {
+      const worker = await this.$repository.worker.find({
+        _where: { id: workerId },
+        populate: ["job_position", "job_position.organizational_unit"],
+      });
+      this.currentWorker = worker[0] || {};
+    },
+    async fetchSections() {
+      this.sections = await this.$repository.section.find({ _limit: -1 });
+    },
     toogleMenu() {
       console.log("entro");
       this.open = !this.open;
