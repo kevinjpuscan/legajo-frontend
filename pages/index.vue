@@ -2,7 +2,7 @@
   <Wrapper>
     <section class="actions">
       <div>
-        <Button>Agregar Servidor Público</Button>
+        <Button @click="toogleModalNewWorker">Agregar Servidor Público</Button>
       </div>
       <div class="action-search">
         <b-input
@@ -36,6 +36,16 @@
         :has-more-preview="currentPage > 1"
       />
     </section>
+    <ModalNewWorker
+      :value="showModalNewWorker"
+      @submit="submitNewWorker"
+      @close="toogleModalNewWorker"
+    />
+    <ModalConfirmation
+      :model="showModalConfirmation"
+      @resolve="resolveAction"
+      @reject="rejectAction"
+    />
   </Wrapper>
 </template>
 
@@ -44,7 +54,8 @@ import Wrapper from "~/components/containers/Wrapper.vue";
 import Button from "~/components/shared/Button.vue";
 import WorkerCard from "~/components/molecules/WorkerCard.vue";
 import Pagination from "~/components/shared/Pagination.vue";
-
+import ModalNewWorker from "~/components/workers/ModalNewWorker.vue";
+import ModalConfirmation from "~/components/shared/ModalConfirmation.vue";
 export default {
   name: "HomePage",
 
@@ -53,12 +64,17 @@ export default {
     Button,
     WorkerCard,
     Pagination,
+    ModalNewWorker,
+    ModalConfirmation,
   },
   data: () => ({
     workers: [],
     searchText: "",
     currentPage: 1,
     perPage: 15,
+    showModalNewWorker: false,
+    showModalConfirmation: false,
+    newWorker: {},
   }),
   computed: {
     filters() {
@@ -91,6 +107,42 @@ export default {
     },
     jobPosition(worker) {
       return worker.job_position?.title;
+    },
+    toogleModalNewWorker() {
+      this.showModalNewWorker = !this.showModalNewWorker;
+    },
+    toogleModalConfirmation() {
+      this.showModalConfirmation = !this.showModalConfirmation;
+    },
+    submitNewWorker(form) {
+      this.newWorker = form;
+      this.toogleModalConfirmation();
+    },
+    async resolveAction() {
+      this.$store.commit("loading", true);
+      try {
+        await this.$repository.worker.create(this.newWorker);
+        this.$buefy.toast.open({
+          message: "Servidor Público registrado correctamente",
+          type: "is-success",
+          queue: false,
+          duration: 3000,
+        });
+        this.toogleModalNewWorker();
+      } catch (e) {
+        this.$buefy.toast.open({
+          message: "Ocurrió un error, verifique la información",
+          type: "is-danger",
+        });
+      } finally {
+        this.$store.commit("loading", false);
+        await this.$fetch();
+        this.toogleModalConfirmation();
+      }
+    },
+    rejectAction() {
+      this.toogleModalConfirmation();
+      console.log("reject");
     },
   },
   watch: {

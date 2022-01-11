@@ -25,6 +25,17 @@ extend('verifyPhone', (phoneNumber) => {
   return true
 })
 
+extend('verifyDni', (dni) => {
+  const dniRegExp =
+    '^[0-9]{8,8}'
+
+  if (!dni.match(dniRegExp)) {
+    return 'Ingresar un número de DNI valido'
+  }
+ 
+  return true
+})
+
 // with typescript
 for (const [rule, validation] of Object.entries(rules)) {
   extend(rule, {
