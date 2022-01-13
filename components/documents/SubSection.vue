@@ -2,34 +2,31 @@
   <section class="subsection">
     <div class="subsection-header">
       <div class="subsection-title">
-        <h1>A.Título de la SubSection</h1>
+        <h1>{{ title() }}</h1>
       </div>
       <div class="subsection-actions">
         <b-select placeholder="Agregar Documento">
-          <option v-for="option in options" :value="option.id" :key="option.id">
+          <option
+            v-for="option in subSection.documentFactories"
+            :value="option.id"
+            :key="option.id"
+          >
             {{ option.title }}
           </option>
         </b-select>
       </div>
     </div>
     <div class="subsection-content">
-      <div class="document-content">
-        <Document :active="true" />
-      </div>
-      <div class="document-content">
-        <Document :active="true" />
-      </div>
-      <div class="document-content">
-        <Document :active="true" />
-      </div>
-      <div class="document-content">
-        <Document :active="true" />
-      </div>
-      <div class="document-content">
-        <Document />
-      </div>
-      <div class="document-content">
-        <Document />
+      <div
+        class="document-content"
+        v-for="(documentFactory, index) in subSection.documentFactories"
+        :key="index"
+      >
+        <Document
+          :id="documentFactory.id"
+          :title="documentFactory.title"
+          :documents="documentFactory.documents"
+        />
       </div>
     </div>
   </section>
@@ -39,6 +36,16 @@
 import Document from "~/components/documents/Document.vue";
 export default {
   components: { Document },
+  props: {
+    subSection: {
+      type: Object,
+      default: () => ({
+        title: "Título de subsección",
+        ordinal_letter: "0.",
+        documentFactories: [],
+      }),
+    },
+  },
   data: () => ({
     options: [
       { id: 1, title: "Documento tipo 1" },
@@ -48,6 +55,15 @@ export default {
       { id: 5, title: "Documento tipo 5" },
     ],
   }),
+  methods: {
+    title() {
+      const ordinalLetter =
+        this.subSection.ordinal_letter !== ""
+          ? `${this.subSection.ordinal_letter}. `
+          : "";
+      return `${ordinalLetter}${this.subSection.title}`;
+    },
+  },
 };
 </script>
 
@@ -69,9 +85,19 @@ export default {
 }
 .subsection-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 5rem), 1fr));
+  @media screen and (min-width: $breakpoint-mobile) {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(100%, 5rem), min(1fr, 150px))
+    );
+  }
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 5rem), 150px));
   gap: 1.5rem;
   padding: 1.5rem 0;
+}
+
+.subsection-actions {
+  max-width: 250px;
 }
 
 .document-content {

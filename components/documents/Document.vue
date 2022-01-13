@@ -1,18 +1,36 @@
 <template>
-  <div :class="`document ${active && 'active'}`" @click="toogleModal">
-    <div class="document-title">
-      Resultado de las respectivas etapas del proceso de selección
-    </div>
-    <div class="document-total">3 documentos</div>
+  <div :class="`document ${active() && 'active'}`" @click="toogleModal">
+    <b-tooltip :label="title" multilined>
+      <div class="document-title">
+        {{ title | short }}
+      </div>
+      <div class="document-total">{{ documents.length }} documentos</div>
+    </b-tooltip>
   </div>
 </template>
 
 <script>
 export default {
+  filters: {
+    short(slug) {
+      const MAX_LETTERS = 80;
+      return slug.length > MAX_LETTERS
+        ? `${slug.substring(0, MAX_LETTERS)}...`
+        : slug;
+    },
+  },
   props: {
-    active: {
-      type: Boolean,
-      default: false,
+    id: {
+      type: Number,
+      default: 0,
+    },
+    title: {
+      type: String,
+      default: "",
+    },
+    documents: {
+      type: Array,
+      default: () => [],
     },
   },
   data: () => ({
@@ -21,6 +39,9 @@ export default {
   methods: {
     toogleModal() {
       this.isModalOpen = !this.isModalOpen;
+    },
+    active() {
+      return this.documents.length > 0;
     },
   },
 };
@@ -44,9 +65,12 @@ export default {
   flex-direction: column;
   gap: 0.5rem;
   align-items: center;
+  justify-content: center;
+  min-height: 150px;
 
   .document-total {
     font-weight: bold;
   }
 }
 </style>
+

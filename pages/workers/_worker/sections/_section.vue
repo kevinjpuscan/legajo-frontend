@@ -1,8 +1,11 @@
 <template>
   <Wrapper>
     <div class="section">
-      <SubSection />
-      <SubSection />
+      <SubSection
+        v-for="(subSection, index) in subSections"
+        :key="index"
+        :sub-section="subSection"
+      />
     </div>
   </Wrapper>
 </template>
@@ -16,6 +19,50 @@ export default {
     SubSection,
   },
   layout: "documents",
+  async fetch() {
+    this.$store.commit("loading", true);
+    const { worker, section } = this.$route.params;
+    const currentSection = await this.$repository.section.findOne(section);
+    const documents = await this.$repository.document.find({
+      _where: {
+        worker,
+        document_factory_in: currentSection.document_factories.map(
+          (doc) => doc.id
+        ),
+      },
+    });
+
+    const documentsFactories = currentSection.document_factories.map(
+      (documentFactory) => ({
+        ...documentFactory,
+        documents: documents.filter(
+          (document) => document.document_factory === documentFactory.id
+        ),
+      })
+    );
+
+    if (currentSection.subsections.length > 0) {
+      this.subSections = currentSection.subsections.map((subsection) => ({
+        ...subsection,
+        documentFactories: documentsFactories.filter(
+          (documentFactory) => documentFactory.subsection === subsection.id
+        ),
+      }));
+    } else {
+      this.subSections = [
+        {
+          id: 0,
+          ordinal_letter: "",
+          title: currentSection.title,
+          documentFactories: documentsFactories,
+        },
+      ];
+    }
+    this.$store.commit("loading", false);
+  },
+  data: () => ({
+    subSections: [],
+  }),
 };
 </script>
 

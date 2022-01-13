@@ -53,6 +53,8 @@ export default {
       'users',
       'workers',
       'sections',
+      'document-factories',
+      'documents',
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build

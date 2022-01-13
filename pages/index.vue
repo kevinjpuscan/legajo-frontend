@@ -180,7 +180,13 @@ export default {
 .elements {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  @media screen and (min-width: $breakpoint-mobile) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 150px));
+  }
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 10rem), min(1fr, 150px))
+  );
 }
 
 .element {
