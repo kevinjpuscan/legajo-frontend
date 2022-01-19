@@ -2,21 +2,22 @@ const Request = require('@/repositories/request')
 const qs = require('qs')
 class Document extends Request {
   /**
-  *
-  * @param {Object} params
-  * @returns {*}
-  */
- find(params) {
-   const stringifyParams = qs.stringify({ ...params })
-   return this.$strapi.$http.$get(`/documents?${stringifyParams}`)
- }
+   *
+   * @param {Object} params
+   * @returns {*}
+   */
+  find(params) {
+    const stringifyParams = qs.stringify({ ...params })
+    return this.$strapi.$http.$get(`/documents?${stringifyParams}`)
+  }
+
   /**
    *
    * @param {int} id
    * @returns {*}
    */
   findOne(id) {
-    return this.$strapi['documents'].findOne(id)
+    return this.$strapi.documents.findOne(id)
   }
 
   /**
@@ -25,7 +26,7 @@ class Document extends Request {
    * @returns {params}
    */
   create(params) {
-    return this.$strapi['documents'].create(params)
+    return this.$strapi.documents.create(params)
   }
 
   /**
@@ -35,7 +36,7 @@ class Document extends Request {
    * @param params
    */
   update(id, params) {
-    return this.$strapi['documents'].update(id, params)
+    return this.$strapi.documents.update(id, params)
   }
 
   /**
@@ -45,7 +46,7 @@ class Document extends Request {
    */
   count(params) {
     const stringifyParams = qs.stringify({ ...params }, { encode: false })
-    return this.$strapi['documents'].count(stringifyParams)
+    return this.$strapi.documents.count(stringifyParams)
   }
 }
 

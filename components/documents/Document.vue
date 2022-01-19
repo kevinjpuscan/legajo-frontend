@@ -1,10 +1,12 @@
 <template>
-  <div :class="`document ${active() && 'active'}`" @click="toogleModal">
+  <div :class="`document ${active() && 'active'}`" @click="handleDocumentClick">
     <b-tooltip :label="title" multilined>
       <div class="document-title">
         {{ title | short }}
       </div>
-      <div class="document-total">{{ documents.length }} documentos</div>
+      <div class="document-total">
+        {{ documentFactory.documents.length }} documentos
+      </div>
     </b-tooltip>
   </div>
 </template>
@@ -13,10 +15,10 @@
 export default {
   filters: {
     short(slug) {
-      const MAX_LETTERS = 80;
+      const MAX_LETTERS = 80
       return slug.length > MAX_LETTERS
         ? `${slug.substring(0, MAX_LETTERS)}...`
-        : slug;
+        : slug
     },
   },
   props: {
@@ -26,29 +28,31 @@ export default {
     },
     title: {
       type: String,
-      default: "",
+      default: '',
     },
-    documents: {
-      type: Array,
-      default: () => [],
+    documentFactory: {
+      type: Object,
+      default: () => ({}),
+    },
+    handleClick: {
+      type: Function,
+      default: () => {},
     },
   },
-  data: () => ({
-    isModalOpen: false,
-  }),
+
   methods: {
-    toogleModal() {
-      this.isModalOpen = !this.isModalOpen;
+    handleDocumentClick() {
+      this.handleClick(this.documentFactory)
     },
     active() {
-      return this.documents.length > 0;
+      return this.documentFactory.documents.length > 0
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 
 .document.active {
   color: #209cee;
@@ -73,4 +77,3 @@ export default {
   }
 }
 </style>
-

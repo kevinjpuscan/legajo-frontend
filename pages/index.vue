@@ -16,13 +16,13 @@
     </section>
 
     <section class="elements">
-      <div class="element" v-for="(worker, index) in workers" :key="index">
+      <div v-for="(worker, index) in workers" :key="index" class="element">
         <WorkerCard
+          :id="worker.id"
           image="https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg"
           :names="`${worker.first_names} ${worker.last_names}`"
           :job-position="jobPosition(worker)"
           :area="area(worker)"
-          :id="worker.id"
           :is-large="true"
         />
       </div>
@@ -50,14 +50,14 @@
 </template>
 
 <script>
-import Wrapper from "~/components/containers/Wrapper.vue";
-import Button from "~/components/shared/Button.vue";
-import WorkerCard from "~/components/molecules/WorkerCard.vue";
-import Pagination from "~/components/shared/Pagination.vue";
-import ModalNewWorker from "~/components/workers/ModalNewWorker.vue";
-import ModalConfirmation from "~/components/shared/ModalConfirmation.vue";
+import Wrapper from '~/components/containers/Wrapper.vue'
+import Button from '~/components/shared/Button.vue'
+import WorkerCard from '~/components/molecules/WorkerCard.vue'
+import Pagination from '~/components/shared/Pagination.vue'
+import ModalNewWorker from '~/components/workers/ModalNewWorker.vue'
+import ModalConfirmation from '~/components/shared/ModalConfirmation.vue'
 export default {
-  name: "HomePage",
+  name: 'HomePage',
 
   components: {
     Wrapper,
@@ -67,9 +67,15 @@ export default {
     ModalNewWorker,
     ModalConfirmation,
   },
+  async fetch() {
+    const { page, search } = this.$route.query
+    this.currentPage = page || 1
+    this.searchText = search || ''
+    this.workers = await this.fetchWorkers()
+  },
   data: () => ({
     workers: [],
-    searchText: "",
+    searchText: '',
     currentPage: 1,
     perPage: 15,
     showModalNewWorker: false,
@@ -79,7 +85,7 @@ export default {
   computed: {
     filters() {
       return {
-        populate: ["job_position", "job_position.organizational_unit"],
+        populate: ['job_position', 'job_position.organizational_unit'],
         _where: {
           _or: [
             { first_names_contains: this.searchText },
@@ -89,72 +95,66 @@ export default {
         },
         _limit: this.perPage,
         _start: (this.currentPage - 1) * this.perPage,
-      };
-    },
-  },
-  async fetch() {
-    const { page, search } = this.$route.query;
-    this.currentPage = page || 1;
-    this.searchText = search || "";
-    this.workers = await this.fetchWorkers();
-  },
-  methods: {
-    async fetchWorkers() {
-      return this.$repository.worker.find(this.filters);
-    },
-    area(worker) {
-      return worker.job_position?.organizational_unit?.name;
-    },
-    jobPosition(worker) {
-      return worker.job_position?.title;
-    },
-    toogleModalNewWorker() {
-      this.showModalNewWorker = !this.showModalNewWorker;
-    },
-    toogleModalConfirmation() {
-      this.showModalConfirmation = !this.showModalConfirmation;
-    },
-    submitNewWorker(form) {
-      this.newWorker = form;
-      this.toogleModalConfirmation();
-    },
-    async resolveAction() {
-      this.$store.commit("loading", true);
-      try {
-        await this.$repository.worker.create(this.newWorker);
-        this.$buefy.toast.open({
-          message: "Servidor Público registrado correctamente",
-          type: "is-success",
-          queue: false,
-          duration: 3000,
-        });
-        this.toogleModalNewWorker();
-      } catch (e) {
-        this.$buefy.toast.open({
-          message: "Ocurrió un error, verifique la información",
-          type: "is-danger",
-        });
-      } finally {
-        this.$store.commit("loading", false);
-        await this.$fetch();
-        this.toogleModalConfirmation();
       }
-    },
-    rejectAction() {
-      this.toogleModalConfirmation();
-      console.log("reject");
     },
   },
   watch: {
     async searchText() {
-      this.workers = await this.fetchWorkers();
+      this.workers = await this.fetchWorkers()
     },
   },
-};
+  methods: {
+    fetchWorkers() {
+      return this.$repository.worker.find(this.filters)
+    },
+    area(worker) {
+      return worker.job_position?.organizational_unit?.name
+    },
+    jobPosition(worker) {
+      return worker.job_position?.title
+    },
+    toogleModalNewWorker() {
+      this.showModalNewWorker = !this.showModalNewWorker
+    },
+    toogleModalConfirmation() {
+      this.showModalConfirmation = !this.showModalConfirmation
+    },
+    submitNewWorker(form) {
+      this.newWorker = form
+      this.toogleModalConfirmation()
+    },
+    async resolveAction() {
+      this.$store.commit('loading', true)
+      try {
+        await this.$repository.worker.create(this.newWorker)
+        this.$buefy.toast.open({
+          message: 'Servidor Público registrado correctamente',
+          type: 'is-success',
+          queue: false,
+          duration: 3000,
+        })
+        this.toogleModalNewWorker()
+      } catch (e) {
+        this.$buefy.toast.open({
+          message: 'Ocurrió un error, verifique la información',
+          type: 'is-danger',
+        })
+      } finally {
+        this.$store.commit('loading', false)
+        await this.$fetch()
+        this.toogleModalConfirmation()
+      }
+    },
+    rejectAction() {
+      this.toogleModalConfirmation()
+      console.log('reject')
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 .actions {
   width: 100%;
   display: flex;

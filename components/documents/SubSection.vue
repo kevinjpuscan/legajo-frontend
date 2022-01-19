@@ -8,8 +8,8 @@
         <b-select placeholder="Agregar Documento">
           <option
             v-for="option in subSection.documentFactories"
-            :value="option.id"
             :key="option.id"
+            :value="option.id"
           >
             {{ option.title }}
           </option>
@@ -18,57 +18,95 @@
     </div>
     <div class="subsection-content">
       <div
-        class="document-content"
         v-for="(documentFactory, index) in subSection.documentFactories"
         :key="index"
+        class="document-content"
       >
         <Document
           :id="documentFactory.id"
           :title="documentFactory.title"
-          :documents="documentFactory.documents"
+          :document-factory="documentFactory"
+          :handle-click="handleClickDocument"
         />
       </div>
+    </div>
+    <div class="modals">
+      <ModalNewDocument
+        :value="newDocument.isOpenModal"
+        @submit="() => {}"
+        @close="closeModalNewDocument"
+      />
+      <ModalShowDocument
+        :value="showDocument.isOpenModal"
+        :document-factory="showDocument.documentFactory"
+        @submit="() => {}"
+        @close="closeModalShowDocument"
+      />
     </div>
   </section>
 </template>
 
 <script>
-import Document from "~/components/documents/Document.vue";
+import Document from '~/components/documents/Document.vue'
+import ModalNewDocument from '~/components/documents/ModalNewDocument.vue'
+import ModalShowDocument from '~/components/documents/ModalShowDocument.vue'
 export default {
-  components: { Document },
+  components: { Document, ModalNewDocument, ModalShowDocument },
   props: {
     subSection: {
       type: Object,
       default: () => ({
-        title: "Título de subsección",
-        ordinal_letter: "0.",
+        title: 'Título de subsección',
+        ordinal_letter: '0.',
         documentFactories: [],
       }),
     },
   },
   data: () => ({
-    options: [
-      { id: 1, title: "Documento tipo 1" },
-      { id: 2, title: "Documento tipo 2" },
-      { id: 3, title: "Documento tipo 3" },
-      { id: 4, title: "Documento tipo 4" },
-      { id: 5, title: "Documento tipo 5" },
-    ],
+    options: [],
+    newDocument: {
+      isOpenModal: false,
+    },
+    showDocument: {
+      isOpenModal: false,
+      documentFactory: {},
+    },
   }),
   methods: {
     title() {
       const ordinalLetter =
-        this.subSection.ordinal_letter !== ""
+        this.subSection.ordinal_letter !== ''
           ? `${this.subSection.ordinal_letter}. `
-          : "";
-      return `${ordinalLetter}${this.subSection.title}`;
+          : ''
+      return `${ordinalLetter}${this.subSection.title}`
+    },
+    closeModalNewDocument() {
+      this.newDocument.isOpenModal = false
+    },
+    closeModalShowDocument() {
+      this.showDocument.isOpenModal = false
+    },
+    async showModalShowDocument(documentFactory) {
+      const documents = await this.$repository.document.find({
+        _where: {
+          id_in: documentFactory.documents?.map((document) => document.id),
+        },
+        populate: ['document_files'],
+      })
+      documentFactory.documents = documents
+      this.showDocument = { isOpenModal: true, documentFactory }
+    },
+    async handleClickDocument(documentFactory) {
+      documentFactory.documents.length > 0
+        ? await this.showModalShowDocument(documentFactory)
+        : (this.newDocument.isOpenModal = true)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 .subsection {
   padding: 1.5rem 0;
 
