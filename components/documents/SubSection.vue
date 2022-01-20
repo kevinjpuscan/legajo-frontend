@@ -40,7 +40,13 @@
         :value="showDocument.isOpenModal"
         :document-factory="showDocument.documentFactory"
         @submit="() => {}"
+        @delete="showModalDeleteConfirmation"
         @close="closeModalShowDocument"
+      />
+      <ModalConfirmationDelete
+        :model="documentDelete.isOpenModal"
+        @resolve="deleteDocument"
+        @reject="cancelDeleteDocument"
       />
     </div>
   </section>
@@ -50,8 +56,14 @@
 import Document from '~/components/documents/Document.vue'
 import ModalNewDocument from '~/components/documents/ModalNewDocument.vue'
 import ModalShowDocument from '~/components/documents/ModalShowDocument.vue'
+import ModalConfirmationDelete from '~/components/shared/ModalConfirmation.vue'
 export default {
-  components: { Document, ModalNewDocument, ModalShowDocument },
+  components: {
+    Document,
+    ModalNewDocument,
+    ModalShowDocument,
+    ModalConfirmationDelete,
+  },
   props: {
     subSection: {
       type: Object,
@@ -70,6 +82,10 @@ export default {
     showDocument: {
       isOpenModal: false,
       documentFactory: {},
+    },
+    documentDelete: {
+      documentId: 0,
+      isOpenModal: false,
     },
   }),
   methods: {
@@ -100,6 +116,28 @@ export default {
       documentFactory.documents.length > 0
         ? await this.showModalShowDocument(documentFactory)
         : (this.newDocument.isOpenModal = true)
+    },
+    showModalDeleteConfirmation(documentId) {
+      this.documentDelete = {
+        documentId,
+        isOpenModal: true,
+      }
+    },
+    async deleteDocument() {
+      await this.$repository.document.delete(this.documentDelete.documentId)
+      this.documentDelete = {
+        documentId: 0,
+        isOpenModal: false,
+      }
+      this.showDocument = { isOpenModal: false, documentFactory: {} }
+      this.cancelDeleteDocument()
+      this.$emit('refresh')
+    },
+    cancelDeleteDocument() {
+      this.documentDelete = {
+        documentId: 0,
+        isOpenModal: false,
+      }
     },
   },
 }

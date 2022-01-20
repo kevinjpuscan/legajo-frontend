@@ -28,16 +28,16 @@ export default {
       type: Function,
     },
     title: {
-      default: "title",
+      default: 'title',
       type: String,
     },
   },
   computed: {
     hasFooter() {
-      return this.$slots.footer;
+      return this.$slots.footer
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

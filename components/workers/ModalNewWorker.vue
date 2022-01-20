@@ -64,12 +64,12 @@
 </template>
 
 <script>
-import { ValidationObserver } from "vee-validate";
-import ModalWithTitleBar from "~/components/shared/ModalWithTitleBar.vue";
-import Wrapper from "~/components/containers/Wrapper.vue";
-import Button from "~/components/shared/Button.vue";
-import FormInput from "~/components/Form/FormInput";
-import FormDatePicker from "~/components/Form/FormDatePicker";
+import { ValidationObserver } from 'vee-validate'
+import ModalWithTitleBar from '~/components/shared/ModalWithTitleBar.vue'
+import Wrapper from '~/components/containers/Wrapper.vue'
+import Button from '~/components/shared/Button.vue'
+import FormInput from '~/components/Form/FormInput'
+import FormDatePicker from '~/components/Form/FormDatePicker'
 
 export default {
   components: {
@@ -89,31 +89,31 @@ export default {
   data() {
     return {
       form: {
-        identification_number: "",
-        last_names: "",
-        first_names: "",
-        birth_date: "",
+        identification_number: '',
+        last_names: '',
+        first_names: '',
+        birth_date: '',
       },
       active: this.value,
       confirmedModal: false,
       isLoading: false,
-    };
+    }
   },
   watch: {
     value() {
-      this.active = this.value;
-      this.form = {};
+      this.active = this.value
+      this.form = {}
     },
   },
   methods: {
     close() {
-      this.active = !this.active;
-      this.$emit("close");
-      this.form = {};
+      this.active = !this.active
+      this.$emit('close')
+      this.form = {}
     },
     submit() {
-      this.$emit("submit", this.form);
+      this.$emit('submit', this.form)
     },
   },
-};
+}
 </script>

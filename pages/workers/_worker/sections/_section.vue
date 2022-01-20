@@ -5,24 +5,25 @@
         v-for="(subSection, index) in subSections"
         :key="index"
         :sub-section="subSection"
+        @refresh="handleRefresh"
       />
     </div>
   </Wrapper>
 </template>
 
 <script>
-import Wrapper from "~/components/containers/Wrapper.vue";
-import SubSection from "~/components/documents/SubSection.vue";
+import Wrapper from '~/components/containers/Wrapper.vue'
+import SubSection from '~/components/documents/SubSection.vue'
 export default {
   components: {
     Wrapper,
     SubSection,
   },
-  layout: "documents",
+  layout: 'documents',
   async fetch() {
-    this.$store.commit("loading", true);
-    const { worker, section } = this.$route.params;
-    const currentSection = await this.$repository.section.findOne(section);
+    this.$store.commit('loading', true)
+    const { worker, section } = this.$route.params
+    const currentSection = await this.$repository.section.findOne(section)
     const documents = await this.$repository.document.find({
       _where: {
         worker,
@@ -30,7 +31,7 @@ export default {
           (doc) => doc.id
         ),
       },
-    });
+    })
 
     const documentsFactories = currentSection.document_factories.map(
       (documentFactory) => ({
@@ -39,7 +40,7 @@ export default {
           (document) => document.document_factory === documentFactory.id
         ),
       })
-    );
+    )
 
     if (currentSection.subsections.length > 0) {
       this.subSections = currentSection.subsections.map((subsection) => ({
@@ -47,23 +48,28 @@ export default {
         documentFactories: documentsFactories.filter(
           (documentFactory) => documentFactory.subsection === subsection.id
         ),
-      }));
+      }))
     } else {
       this.subSections = [
         {
           id: 0,
-          ordinal_letter: "",
+          ordinal_letter: '',
           title: currentSection.title,
           documentFactories: documentsFactories,
         },
-      ];
+      ]
     }
-    this.$store.commit("loading", false);
+    this.$store.commit('loading', false)
   },
   data: () => ({
     subSections: [],
   }),
-};
+  methods: {
+    handleRefresh() {
+      this.$fetch()
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

@@ -27,14 +27,22 @@
               </b-select>
             </div>
             <div class="document-body">
-              <code>
-                {{ documentActive }}
-              </code>
+              <Field
+                v-for="(field, index) in documentActive.information"
+                :key="index"
+                :label="field.name"
+                :value="field.value"
+                :type="field.type"
+              />
+              <Files :files="documentActive.document_files" />
             </div>
           </div>
         </Wrapper>
         <template #footer>
-          <div class="is-justify-content-flex-center">
+          <div class="modal-footer_actions">
+            <Button type="is-text" rounded @click="handleDelete()">
+              Eliminar Documento
+            </Button>
             <Button type="is-primary" rounded @click="handleSubmit(submit)">
               Agregar Nuevo Documento
             </Button>
@@ -46,15 +54,19 @@
 </template>
 
 <script>
+import Files from './Files.vue'
 import ModalWithTitleBar from '~/components/shared/ModalWithTitleBar.vue'
 import Wrapper from '~/components/containers/Wrapper.vue'
 import Button from '~/components/shared/Button.vue'
+import Field from '~/components/documents/Fields/Field.vue'
 
 export default {
   components: {
     ModalWithTitleBar,
     Wrapper,
     Button,
+    Field,
+    Files,
   },
   props: {
     value: {
@@ -98,9 +110,10 @@ export default {
       if (!this.documentActiveId) {
         this.documentActive = {}
       }
-      this.documentActive = this.documentFactory.documents?.find(
-        (document) => document.id === this.documentActiveId
-      )
+      this.documentActive =
+        this.documentFactory.documents?.find(
+          (document) => document.id === this.documentActiveId
+        ) || {}
     },
     documentFactory() {
       this.documentActiveId = this.documentFactory.documents
@@ -117,6 +130,9 @@ export default {
     submit() {
       this.$emit('submit', this.form)
     },
+    handleDelete() {
+      this.$emit('delete', this.documentActiveId)
+    },
   },
 }
 </script>
@@ -129,5 +145,10 @@ export default {
   justify-content: center;
   gap: 1rem;
   padding: 2rem 0;
+}
+.modal-footer_actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>

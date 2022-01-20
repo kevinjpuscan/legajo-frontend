@@ -147,7 +147,6 @@ export default {
     },
     rejectAction() {
       this.toogleModalConfirmation()
-      console.log('reject')
     },
   },
 }

@@ -16,30 +16,22 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    './assets/scss/main.scss',
-  ],
+  css: ['./assets/scss/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    '~/plugins/vee-validate.js',
-    '~/plugins/repositories.js',
-  ],
+  plugins: ['~/plugins/vee-validate.js', '~/plugins/repositories.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-  ],
+  buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -58,8 +50,7 @@ export default {
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  },
+  build: {},
   i18n: {
     seo: false,
     locales: [
@@ -74,4 +65,7 @@ export default {
     defaultLocale: 'es',
   },
   loadingIndicator: '~/template/loading.html',
+  env: {
+    strapiUrl: process.env.STRAPI_URL || 'https://localhost:1337/',
+  },
 }

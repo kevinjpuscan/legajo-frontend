@@ -2,14 +2,15 @@ const Request = require('@/repositories/request')
 const qs = require('qs')
 class Worker extends Request {
   /**
-  *
-  * @param {Object} params
-  * @returns {*}
-  */
- find(params) {
-   const stringifyParams = qs.stringify({ ...params })
-   return this.$strapi.$http.$get(`/workers?${stringifyParams}`)
- }
+   *
+   * @param {Object} params
+   * @returns {*}
+   */
+  find(params) {
+    const stringifyParams = qs.stringify({ ...params })
+    return this.$strapi.$http.$get(`/workers?${stringifyParams}`)
+  }
+
   /**
    *
    * @param {int} id

@@ -56,11 +56,11 @@
 </template>
 
 <script>
-import Menu from "~/components/molecules/Menu.vue";
-import Button from "~/components/shared/Button.vue";
-import LoadingSpinner from "~/components/shared/LoadingSpinner.vue";
+import Menu from '~/components/molecules/Menu.vue'
+import Button from '~/components/shared/Button.vue'
+import LoadingSpinner from '~/components/shared/LoadingSpinner.vue'
 export default {
-  middleware: "auth",
+  middleware: 'auth',
   components: {
     Menu,
     Button,
@@ -71,60 +71,58 @@ export default {
       open: true,
       items: [
         {
-          title: "Servidores Públicos",
-          to: { name: "/" },
+          title: 'Servidores Públicos',
+          to: { name: '/' },
         },
         {
-          title: "Rotaciones",
-          to: { name: "/rotaciones" },
+          title: 'Rotaciones',
+          to: { name: '/rotaciones' },
         },
         {
-          title: "Licencias",
-          to: { name: "/licencias" },
+          title: 'Licencias',
+          to: { name: '/licencias' },
         },
         {
-          title: "Remuneraciones",
-          to: { name: "/remuneraciones" },
+          title: 'Remuneraciones',
+          to: { name: '/remuneraciones' },
         },
         {
-          title: "Reportes",
-          to: { name: "/reportes" },
+          title: 'Reportes',
+          to: { name: '/reportes' },
         },
       ],
       currentWorker: {},
       sections: [],
-    };
+    }
   },
   mounted() {
-    const { worker } = this.$route.params;
-    this.fetchWorker(worker);
-    this.fetchSections();
+    const { worker } = this.$route.params
+    this.fetchWorker(worker)
+    this.fetchSections()
   },
   methods: {
     async fetchWorker(workerId) {
       const worker = await this.$repository.worker.find({
         _where: { id: workerId },
-        populate: ["job_position", "job_position.organizational_unit"],
-      });
-      this.currentWorker = worker[0] || {};
+        populate: ['job_position', 'job_position.organizational_unit'],
+      })
+      this.currentWorker = worker[0] || {}
     },
     async fetchSections() {
-      this.sections = await this.$repository.section.find({ _limit: -1 });
+      this.sections = await this.$repository.section.find({ _limit: -1 })
     },
     toogleMenu() {
-      console.log("entro");
-      this.open = !this.open;
+      this.open = !this.open
     },
     salir() {
-      this.$router.push("/salir");
+      this.$router.push('/salir')
     },
   },
-};
+}
 </script>
 
-
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 .company-logo {
   color: $primary;
   font-weight: bold;
