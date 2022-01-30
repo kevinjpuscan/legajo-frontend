@@ -5,7 +5,10 @@
         <h1>{{ title() }}</h1>
       </div>
       <div class="subsection-actions">
-        <b-select placeholder="Agregar Documento">
+        <b-select
+          v-model="idDocumentFactorySelect"
+          placeholder="Agregar Documento"
+        >
           <option
             v-for="option in subSection.documentFactories"
             :key="option.id"
@@ -33,20 +36,26 @@
     <div class="modals">
       <ModalNewDocument
         :value="newDocument.isOpenModal"
-        @submit="() => {}"
+        :document-factory="newDocument.documentFactory"
+        @submit="showModalConfirmationNewDocument"
         @close="closeModalNewDocument"
       />
       <ModalShowDocument
         :value="showDocument.isOpenModal"
         :document-factory="showDocument.documentFactory"
-        @submit="() => {}"
+        @submit="showModalNewDocument"
         @delete="showModalDeleteConfirmation"
         @close="closeModalShowDocument"
       />
-      <ModalConfirmationDelete
+      <ModalConfirmation
         :model="documentDelete.isOpenModal"
         @resolve="deleteDocument"
         @reject="cancelDeleteDocument"
+      />
+      <ModalConfirmation
+        :model="newDocument.isOpenModalConfirmation"
+        @resolve="saveDocument"
+        @reject="cancelSaveDocument"
       />
     </div>
   </section>
@@ -56,13 +65,13 @@
 import Document from '~/components/documents/Document.vue'
 import ModalNewDocument from '~/components/documents/ModalNewDocument.vue'
 import ModalShowDocument from '~/components/documents/ModalShowDocument.vue'
-import ModalConfirmationDelete from '~/components/shared/ModalConfirmation.vue'
+import ModalConfirmation from '~/components/shared/ModalConfirmation.vue'
 export default {
   components: {
     Document,
     ModalNewDocument,
     ModalShowDocument,
-    ModalConfirmationDelete,
+    ModalConfirmation,
   },
   props: {
     subSection: {
@@ -78,6 +87,9 @@ export default {
     options: [],
     newDocument: {
       isOpenModal: false,
+      documentFactory: {},
+      isOpenModalConfirmation: false,
+      document: {},
     },
     showDocument: {
       isOpenModal: false,
@@ -87,7 +99,18 @@ export default {
       documentId: 0,
       isOpenModal: false,
     },
+    idDocumentFactorySelect: null,
   }),
+  watch: {
+    idDocumentFactorySelect(documentFactoryId) {
+      if (documentFactoryId) {
+        const documentFactory = this.subSection.documentFactories.find(
+          (documentFactory) => documentFactory.id === documentFactoryId
+        )
+        this.showModalNewDocument(documentFactory)
+      }
+    },
+  },
   methods: {
     title() {
       const ordinalLetter =
@@ -112,10 +135,14 @@ export default {
       documentFactory.documents = documents
       this.showDocument = { isOpenModal: true, documentFactory }
     },
+    showModalNewDocument(documentFactory) {
+      this.newDocument = { isOpenModal: true, documentFactory }
+      this.showDocument = { ...this.showDocument, isOpenModal: false }
+    },
     async handleClickDocument(documentFactory) {
       documentFactory.documents.length > 0
         ? await this.showModalShowDocument(documentFactory)
-        : (this.newDocument.isOpenModal = true)
+        : this.showModalNewDocument(documentFactory)
     },
     showModalDeleteConfirmation(documentId) {
       this.documentDelete = {
@@ -137,6 +164,30 @@ export default {
       this.documentDelete = {
         documentId: 0,
         isOpenModal: false,
+      }
+    },
+    showModalConfirmationNewDocument(document) {
+      this.newDocument = {
+        ...this.newDocument,
+        document,
+        isOpenModalConfirmation: true,
+      }
+    },
+    async saveDocument() {
+      await this.$repository.document.create(this.newDocument.document)
+      this.newDocument = {
+        ...this.newDocument,
+        isOpenModalConfirmation: false,
+        isOpenModal: false,
+      }
+      this.idDocumentFactorySelect = null
+      this.$emit('refresh')
+    },
+    cancelSaveDocument() {
+      this.newDocument = {
+        ...this.newDocument,
+        document: {},
+        isOpenModalConfirmation: false,
       }
     },
   },

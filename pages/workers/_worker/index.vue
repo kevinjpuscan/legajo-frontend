@@ -31,7 +31,7 @@
         <div class="worker-photo">
           <picture>
             <b-image
-              :src="image"
+              :src="this.$store.state.worker.worker.photo.url | fileUrl"
               alt="The Buefy Logo"
               ratio="1by1"
               :rounded="true"
@@ -39,9 +39,11 @@
           </picture>
         </div>
         <div class="worker-actions-list">
-          <Button disabled>Cambiar Photo</Button>
+          <Button :disabled="!isSaveImageActive" @click="saveImage"
+            >Cambiar Photo</Button
+          >
           <b-field>
-            <b-upload v-model="dropFiles" multiple drag-drop>
+            <b-upload v-model="imageFile" drag-drop>
               <section class="section">
                 <div class="content has-text-centered">
                   <p>
@@ -52,7 +54,6 @@
               </section>
             </b-upload>
           </b-field>
-          <Button>Generar Legajo</Button>
           <Button outlined>Descargar ANEXO 01</Button>
           <Button outlined>Descargar ANEXO 02</Button>
           <Button outlined>Descargar ANEXO 03</Button>
@@ -64,25 +65,50 @@
 </template>
 
 <script>
-import Wrapper from "~/components/containers/Wrapper.vue";
-import Information from "~/components/molecules/Information.vue";
-import Button from "~/components/shared/Button.vue";
+import Wrapper from '~/components/containers/Wrapper.vue'
+import Information from '~/components/molecules/Information.vue'
+import Button from '~/components/shared/Button.vue'
+import CONFIG from '~/config/index'
+
 export default {
-  layout: "documents",
+  layout: 'documents',
   components: {
     Wrapper,
     Information,
     Button,
   },
+  filters: {
+    fileUrl(url) {
+      return url
+        ? `${CONFIG.strapiUrl}${url}`
+        : 'https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg'
+    },
+  },
+
   data: () => ({
-    image:
-      "https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg",
+    imageFile: null,
   }),
-};
+  computed: {
+    isSaveImageActive() {
+      return !!this.imageFile
+    },
+  },
+  methods: {
+    async saveImage() {
+      const { worker } = this.$route.params
+      const image = await this.$repository.upload.create([this.imageFile])
+      await this.$repository.worker.update(worker, {
+        photo: image[0].id,
+      })
+      this.imageFile = null
+      await this.$store.dispatch('worker/fetchWorker', worker)
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 .worker-profile {
   padding: 5rem 0;
   display: grid;

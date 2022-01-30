@@ -5,14 +5,14 @@
         <figure class="media-left">
           <p class="image is-64x64">
             <b-image
-              v-if="image"
-              :src="image"
+              v-if="photo"
+              :src="photo.url | fileUrl"
               alt="The Buefy Logo"
               ratio="1by1"
               :rounded="true"
             ></b-image>
             <b-skeleton
-              v-if="!image"
+              v-if="!photo"
               circle
               width="64px"
               height="64px"
@@ -36,23 +36,31 @@
 </template>
 
 <script>
+import CONFIG from '~/config/index'
 export default {
+  filters: {
+    fileUrl(url) {
+      return url
+        ? `${CONFIG.strapiUrl}${url}`
+        : 'https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg'
+    },
+  },
   props: {
-    image: {
-      type: String,
+    photo: {
+      type: Object,
       default: null,
     },
     jobPosition: {
       type: String,
-      default: "Sin Cargo",
+      default: 'Sin Cargo',
     },
     area: {
       type: String,
-      default: "Sin Area",
+      default: 'Sin Area',
     },
     names: {
       type: String,
-      default: "NN",
+      default: 'NN',
     },
     id: {
       type: Number,
@@ -63,11 +71,11 @@ export default {
       default: false,
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 
 .worker-card:hover {
   cursor: pointer;

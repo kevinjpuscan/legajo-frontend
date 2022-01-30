@@ -4,4 +4,6 @@ export default {
   ENUM: 'ENUM',
   NUMBER: 'NUMBER',
   LIST: 'LIST',
+  FILE: 'FILE',
+  IMAGE: 'IMAGE',
 }

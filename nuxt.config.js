@@ -47,6 +47,9 @@ export default {
       'sections',
       'document-factories',
       'documents',
+      'upload',
+      'job-position-changes',
+      'work=licenses',
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build

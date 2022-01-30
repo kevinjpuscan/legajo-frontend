@@ -37,11 +37,11 @@
 </template>
 
 <script>
-import Button from "~/components/shared/Button.vue";
-import LoadingSpinner from "~/components/shared/LoadingSpinner.vue";
+import Button from '~/components/shared/Button.vue'
+import LoadingSpinner from '~/components/shared/LoadingSpinner.vue'
 
 export default {
-  middleware: "auth",
+  middleware: 'auth',
   components: {
     Button,
     LoadingSpinner,
@@ -50,38 +50,38 @@ export default {
     return {
       items: [
         {
-          title: "Servidores Públicos",
-          to: { name: "/" },
+          title: 'Servidores Públicos',
+          to: { name: '/' },
         },
         {
-          title: "Rotaciones",
-          to: { name: "/rotaciones" },
+          title: 'Rotaciones',
+          to: { name: '/rotaciones' },
         },
         {
-          title: "Licencias",
-          to: { name: "/licencias" },
+          title: 'Licencias',
+          to: { name: '/licencias' },
         },
         {
-          title: "Remuneraciones",
-          to: { name: "/remuneraciones" },
+          title: 'Remuneraciones',
+          to: { name: '/remuneraciones' },
         },
         {
-          title: "Reportes",
-          to: { name: "/reportes" },
+          title: 'Reportes',
+          to: { name: '/reportes' },
         },
       ],
-    };
+    }
   },
   methods: {
     salir() {
-      this.$router.push("/salir");
+      this.$router.push('/salir')
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 .company-logo {
   color: $primary;
   font-weight: bold;

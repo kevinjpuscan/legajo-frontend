@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import Button from "~/components/shared/Button";
-import ModalWithTitleBar from "~/components/shared/ModalWithTitleBar.vue";
+import Button from '~/components/shared/Button'
+import ModalWithTitleBar from '~/components/shared/ModalWithTitleBar.vue'
 
 export default {
   components: {
@@ -27,7 +27,7 @@ export default {
   props: {
     titleModalAction: {
       type: String,
-      default: "",
+      default: '',
     },
     model: {
       type: Boolean,
@@ -36,11 +36,11 @@ export default {
   },
   methods: {
     resolveAction() {
-      this.$emit("resolve");
+      this.$emit('resolve')
     },
     rejectAction() {
-      this.$emit("reject");
+      this.$emit('reject')
     },
   },
-};
+}
 </script>

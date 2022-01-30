@@ -43,7 +43,10 @@
           />
         </div>
         <div :class="`menu-container ${open ? 'open' : 'close'}`">
-          <Menu :worker="currentWorker" :sections="sections" />
+          <Menu
+            :worker="this.$store.state.worker.worker"
+            :sections="sections"
+          />
         </div>
         <div class="page">
           <div class="content-page">
@@ -65,6 +68,11 @@ export default {
     Menu,
     Button,
     LoadingSpinner,
+  },
+  async fetch() {
+    const { worker } = this.$route.params
+    await this.$store.dispatch('worker/fetchWorker', worker)
+    this.fetchSections()
   },
   data() {
     return {
@@ -91,23 +99,10 @@ export default {
           to: { name: '/reportes' },
         },
       ],
-      currentWorker: {},
       sections: [],
     }
   },
-  mounted() {
-    const { worker } = this.$route.params
-    this.fetchWorker(worker)
-    this.fetchSections()
-  },
   methods: {
-    async fetchWorker(workerId) {
-      const worker = await this.$repository.worker.find({
-        _where: { id: workerId },
-        populate: ['job_position', 'job_position.organizational_unit'],
-      })
-      this.currentWorker = worker[0] || {}
-    },
     async fetchSections() {
       this.sections = await this.$repository.section.find({ _limit: -1 })
     },

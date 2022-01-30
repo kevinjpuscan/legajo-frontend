@@ -6,7 +6,7 @@
     <div class="field-files_value">
       <ul>
         <li v-for="(file, index) in files" :key="index">
-          <a :href="file.url | fileUrl">{{ file.name }}</a>
+          <a target="_blank" :href="file.url | fileUrl">{{ file.name }}</a>
         </li>
       </ul>
     </div>

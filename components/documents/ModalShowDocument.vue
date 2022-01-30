@@ -43,7 +43,7 @@
             <Button type="is-text" rounded @click="handleDelete()">
               Eliminar Documento
             </Button>
-            <Button type="is-primary" rounded @click="handleSubmit(submit)">
+            <Button type="is-primary" rounded @click="submit">
               Agregar Nuevo Documento
             </Button>
           </div>
@@ -128,7 +128,7 @@ export default {
       this.form = {}
     },
     submit() {
-      this.$emit('submit', this.form)
+      this.$emit('submit', this.documentFactory)
     },
     handleDelete() {
       this.$emit('delete', this.documentActiveId)

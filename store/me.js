@@ -59,7 +59,6 @@ export const actions = {
           context.commit('SET_TOKEN', response.jwt)
           context.commit('SET_USER', response.user)
           resolve(response)
-          
         })
         .catch((error) => {
           reject(error)

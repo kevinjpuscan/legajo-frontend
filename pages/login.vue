@@ -46,36 +46,35 @@
 </template>
 
 <script>
-import Button from "~/components/shared/Button.vue";
+import Button from '~/components/shared/Button.vue'
 export default {
-  layout: "empty",
+  layout: 'empty',
   components: {
     Button,
   },
   data: () => ({
-    form: { identifier: "", password: "" },
+    form: { identifier: '', password: '' },
   }),
   methods: {
     async submit() {
       try {
-        await this.$store.dispatch("me/login", this.form);
-        await this.$router.push("/");
+        await this.$store.dispatch('me/login', this.form)
+        await this.$router.push('/')
       } catch (e) {
-        let message = "Usuario o contraseña invalida";
+        const message = 'Usuario o contraseña invalida'
         this.$buefy.notification.open({
           message,
-          type: "is-danger",
+          type: 'is-danger',
           duration: 5000,
-        });
+        })
       }
     },
   },
-};
+}
 </script>
 
-
 <style lang="scss" scoped>
-@import "assets/scss/_theme-default";
+@import 'assets/scss/_theme-default';
 .container-page {
   min-height: 100vh;
   display: flex;

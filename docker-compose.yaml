@@ -1,0 +1,11 @@
+version: "3"
+services:
+  frontend:
+    container_name: frontend
+    image: legajo-app/frontend:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      STRAPI_URL: ${STRAPI_URL}
+    ports:
+      - "80:80"

@@ -2,7 +2,7 @@
   <Wrapper>
     <section class="actions">
       <div>
-        <Button @click="toogleModalNewWorker">Agregar Servidor Público</Button>
+        <Button @click="toogleModalNewWorker">Agregar Licencia</Button>
       </div>
       <div class="action-search">
         <b-input
@@ -15,27 +15,56 @@
       </div>
     </section>
 
-    <section class="elements">
-      <div v-for="(worker, index) in workers" :key="index" class="element">
-        <WorkerCard
-          :id="worker.id"
-          :photo="worker.photo"
-          :names="`${worker.first_names} ${worker.last_names}`"
-          :job-position="jobPosition(worker)"
-          :area="area(worker)"
-          :is-large="true"
-        />
-      </div>
-    </section>
+    <b-table
+      :data="workLicenses"
+      :striped="true"
+      :mobile-cards="true"
+      :hoverable="true"
+      :bordered="true"
+      :loading="isLoading"
+      width="100%"
+    >
+      <b-table-column v-slot="props" label="Tipo">
+        {{ props.row.type }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="DNI">
+        {{ props.row.worker.identification_number }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Apellidos">
+        {{ props.row.worker.last_names | truncate(20) }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Nombres">
+        {{ props.row.worker.first_names | truncate(20) }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Unidad Origen">
+        {{ props.row.organizational_unit.name | truncate(20) }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Desde">
+        {{ props.row.date_start | truncate(20) }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Hasta">
+        {{ props.row.date_end | truncate(20) }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Estado">
+        {{ props.row.status | truncate(20) }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Acciones">
+        {{ props.row.id }}
+      </b-table-column>
+      <template #empty>
+        <div class="has-text-centered">No se encontraron licencias</div>
+      </template>
+    </b-table>
 
     <section class="pagination">
       <Pagination
         :current-page="Number(currentPage)"
         :route-base="`?search=${searchText}&page=`"
-        :has-more-next="workers.length === perPage"
+        :has-more-next="workLicenses.length === perPage"
         :has-more-preview="currentPage > 1"
       />
     </section>
+
     <ModalNewWorker
       :value="showModalNewWorker"
       @submit="submitNewWorker"
@@ -52,47 +81,49 @@
 <script>
 import Wrapper from '~/components/containers/Wrapper.vue'
 import Button from '~/components/shared/Button.vue'
-import WorkerCard from '~/components/molecules/WorkerCard.vue'
-import Pagination from '~/components/shared/Pagination.vue'
 import ModalNewWorker from '~/components/workers/ModalNewWorker.vue'
 import ModalConfirmation from '~/components/shared/ModalConfirmation.vue'
+import Pagination from '~/components/shared/Pagination.vue'
 export default {
   name: 'HomePage',
 
   components: {
     Wrapper,
     Button,
-    WorkerCard,
-    Pagination,
     ModalNewWorker,
     ModalConfirmation,
+    Pagination,
+  },
+  filters: {
+    truncate(value, length) {
+      return value.length > length ? value.substr(0, length) + '...' : value
+    },
   },
   async fetch() {
     const { page, search } = this.$route.query
     this.currentPage = page || 1
     this.searchText = search || ''
-    this.workers = await this.fetchWorkers()
+    await this.fetchWorkLicenses()
   },
   data: () => ({
-    workers: [],
+    workLicenses: [],
     searchText: '',
     currentPage: 1,
-    perPage: 15,
+    perPage: 10,
     showModalNewWorker: false,
     showModalConfirmation: false,
     newWorker: {},
+    isLoading: false,
   }),
   computed: {
     filters() {
       return {
-        populate: ['job_position', 'job_position.organizational_unit', 'photo'],
-        _where: {
-          _or: [
-            { first_names_contains: this.searchText },
-            { last_names_contains: this.searchText },
-            { identification_number_contains: this.searchText },
-          ],
-        },
+        populate: ['worker', 'organizational_unit'],
+        _or: [
+          { 'worker.first_names_contains': this.searchText },
+          { 'worker.last_names_contains': this.searchText },
+          { 'worker.identification_number_contains': this.searchText },
+        ],
         _limit: this.perPage,
         _start: (this.currentPage - 1) * this.perPage,
       }
@@ -100,12 +131,14 @@ export default {
   },
   watch: {
     async searchText() {
-      this.workers = await this.fetchWorkers()
+      await this.fetchWorkLicenses()
     },
   },
   methods: {
-    fetchWorkers() {
-      return this.$repository.worker.find(this.filters)
+    async fetchWorkLicenses() {
+      this.isLoading = true
+      this.workLicenses = await this.$repository.license.find(this.filters)
+      this.isLoading = false
     },
     area(worker) {
       return worker.job_position?.organizational_unit?.name
@@ -174,22 +207,6 @@ export default {
       margin-top: 0;
     }
   }
-}
-
-.elements {
-  display: grid;
-  gap: 1.5rem;
-  @media screen and (min-width: $breakpoint-mobile) {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 150px));
-  }
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(min(100%, 10rem), min(1fr, 150px))
-  );
-}
-
-.element {
-  grid-column: span 2;
 }
 
 .pagination {
