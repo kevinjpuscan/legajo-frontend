@@ -1,108 +1,66 @@
 <template>
-  <ValidationProvider
-    v-slot="{ errors, valid, required }"
-    ref="provider"
-    :vid="vid"
-    :name="$attrs.name || $props.labelField"
-    :rules="rules"
-    tag="div"
-    class="form-select"
-  >
-    <FormLabel
-      :errors="errors"
-      :valid="valid"
-      :required="required"
-      v-bind="$attrs"
-      :label="$props.labelField"
-    >
-      <multiselect
-        ref="multiselect"
-        v-model="innerValue"
-        :class="{ 'is-danger': errors[0], 'is-success': valid }"
-        :select-label="$t('misc.form.selectOption')"
-        :deselect-label="$t('misc.form.deselectOption')"
-        v-bind="$attrs"
-        @search-change="onSearch"
-        @tag="onTag"
-        @focus.prevent="focusPrevent"
-        @open="onOpen"
-        @close="onClose"
+  <section>
+    <b-field :label="label">
+      <b-autocomplete
+        v-model="name"
+        :data="data"
+        :placeholder="placeHolder"
+        field="title"
+        :loading="isLoading"
+        icon="magnify"
+        @typing="typing"
+        @select="(option) => (selected = option)"
       >
-        <span slot="noOptions">No se encontraron opciones.</span>
-        <slot slot="noResult" name="noResult">
-          <span>No hay resultados.</span>
-        </slot>
-      </multiselect>
-    </FormLabel>
-  </ValidationProvider>
+        <template slot-scope="props">
+          <span>{{ props.option.title }}</span>
+        </template>
+        <template #empty>No hay resultados para {{ name }}</template>
+      </b-autocomplete>
+    </b-field>
+  </section>
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate'
-import Multiselect from 'vue-multiselect'
-import FormLabel from '@/components/Form/FormLabel'
 export default {
-  name: 'FormSelect',
-  components: {
-    FormLabel,
-    ValidationProvider,
-    Multiselect,
-  },
   props: {
-    vid: {
+    data: {
+      type: Array,
+      default: () => [],
+    },
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
+    placeHolder: {
       type: String,
       default: '',
     },
-    rules: {
-      type: [Object, String],
+    label: {
+      type: String,
       default: '',
     },
     value: {
-      type: null,
-      default: null,
-    },
-    labelField: {
       type: String,
       default: '',
     },
-    focusPrevent: {
-      type: Function,
-      default: () => {},
-    },
   },
-  data: () => ({
-    innerValue: '',
-  }),
-  watch: {
-    innerValue(newVal) {
-      this.$emit('input', newVal)
-    },
-    value(newVal) {
-      this.innerValue = newVal
-    },
-  },
-  created() {
-    if (this.value) {
-      this.innerValue = this.value
+  data() {
+    return {
+      selected: null,
+      name: this.value,
     }
   },
-  mounted() {},
+  watch: {
+    selected(val) {
+      this.$emit('selected', val)
+    },
+    value(val) {
+      this.name = val
+    },
+  },
   methods: {
-    onOpen() {
-      this.$emit('open')
-    },
-    onClose() {
-      this.$emit('close')
-    },
-    deactivate() {
-      this.$refs.multiselect.deactivate()
-      this.$refs.provider.validate()
-    },
-    onSearch(q) {
-      this.$emit('search-change', q)
-    },
-    onTag(value) {
-      this.$emit('tag', value)
+    typing(text) {
+      this.$emit('typing', text)
     },
   },
 }

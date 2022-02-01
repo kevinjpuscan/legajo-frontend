@@ -50,6 +50,7 @@ export default {
       'upload',
       'job-position-changes',
       'work=licenses',
+      'job-positions',
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build

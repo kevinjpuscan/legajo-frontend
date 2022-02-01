@@ -2,7 +2,7 @@
   <Wrapper>
     <section class="actions">
       <div>
-        <Button @click="toogleModalNewWorker">Agregar Rotación</Button>
+        <Button @click="toogleModalRotation">Agregar Rotación</Button>
       </div>
       <div class="action-search">
         <b-input
@@ -22,6 +22,7 @@
       :hoverable="true"
       :bordered="true"
       :loading="isLoading"
+      :selected.sync="selected"
       width="100%"
     >
       <b-table-column v-slot="props" label="Fecha">
@@ -50,9 +51,6 @@
       <b-table-column v-slot="props" label="Unidad Destino">
         {{ props.row.job_position_to.organizational_unit.name | truncate(20) }}
       </b-table-column>
-      <b-table-column v-slot="props" label="Acciones">
-        {{ props.row.id }}
-      </b-table-column>
       <template #empty>
         <div class="has-text-centered">No se encontraron rotaciones</div>
       </template>
@@ -67,10 +65,11 @@
       />
     </section>
 
-    <ModalNewWorker
-      :value="showModalNewWorker"
-      @submit="submitNewWorker"
-      @close="toogleModalNewWorker"
+    <ModalRotation
+      :value="showModalRotation"
+      :rotation="selected"
+      @submit="handleSubmit"
+      @close="toogleModalRotation"
     />
     <ModalConfirmation
       :model="showModalConfirmation"
@@ -83,7 +82,7 @@
 <script>
 import Wrapper from '~/components/containers/Wrapper.vue'
 import Button from '~/components/shared/Button.vue'
-import ModalNewWorker from '~/components/workers/ModalNewWorker.vue'
+import ModalRotation from '~/components/rotations/ModalRotation.vue'
 import ModalConfirmation from '~/components/shared/ModalConfirmation.vue'
 import Pagination from '~/components/shared/Pagination.vue'
 export default {
@@ -92,7 +91,7 @@ export default {
   components: {
     Wrapper,
     Button,
-    ModalNewWorker,
+    ModalRotation,
     ModalConfirmation,
     Pagination,
   },
@@ -112,10 +111,11 @@ export default {
     searchText: '',
     currentPage: 1,
     perPage: 10,
-    showModalNewWorker: false,
+    showModalRotation: false,
     showModalConfirmation: false,
-    newWorker: {},
+    rotation: {},
     isLoading: false,
+    selected: null,
   }),
   computed: {
     filters() {
@@ -141,6 +141,11 @@ export default {
     async searchText() {
       await this.fetchRotations()
     },
+    selected() {
+      if (this.selected) {
+        this.toogleModalRotation()
+      }
+    },
   },
   methods: {
     async fetchRotations() {
@@ -154,27 +159,37 @@ export default {
     jobPosition(worker) {
       return worker.job_position?.title
     },
-    toogleModalNewWorker() {
-      this.showModalNewWorker = !this.showModalNewWorker
+    toogleModalRotation() {
+      if (this.showModalRotation) {
+        this.selected = null
+      }
+      this.showModalRotation = !this.showModalRotation
     },
     toogleModalConfirmation() {
       this.showModalConfirmation = !this.showModalConfirmation
     },
-    submitNewWorker(form) {
-      this.newWorker = form
+    handleSubmit(form) {
+      this.rotation = form
       this.toogleModalConfirmation()
     },
     async resolveAction() {
       this.$store.commit('loading', true)
       try {
-        await this.$repository.worker.create(this.newWorker)
+        if (this.rotation.id) {
+          await this.$repository.rotation.update(
+            this.rotation.id,
+            this.rotation
+          )
+        } else {
+          await this.$repository.rotation.create(this.rotation)
+        }
         this.$buefy.toast.open({
-          message: 'Servidor Público registrado correctamente',
+          message: 'Rotación registrado correctamente',
           type: 'is-success',
           queue: false,
           duration: 3000,
         })
-        this.toogleModalNewWorker()
+        this.toogleModalRotation()
       } catch (e) {
         this.$buefy.toast.open({
           message: 'Ocurrió un error, verifique la información',

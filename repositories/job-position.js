@@ -1,6 +1,6 @@
 const Request = require('@/repositories/request')
 const qs = require('qs')
-class Rotation extends Request {
+class JobPosition extends Request {
   /**
    *
    * @param {Object} params
@@ -8,7 +8,7 @@ class Rotation extends Request {
    */
   find(params) {
     const stringifyParams = qs.stringify({ ...params })
-    return this.$strapi.$http.$get(`/job-position-changes?${stringifyParams}`)
+    return this.$strapi.$http.$get(`/job-positions?${stringifyParams}`)
   }
 
   /**
@@ -17,7 +17,7 @@ class Rotation extends Request {
    * @returns {*}
    */
   findOne(id) {
-    return this.$strapi['$job-position-changes'].findOne(id)
+    return this.$strapi['job-positions'].findOne(id)
   }
 
   /**
@@ -26,7 +26,7 @@ class Rotation extends Request {
    * @returns {params}
    */
   create(params) {
-    return this.$strapi['$job-position-changes'].create(params)
+    return this.$strapi['job-positions'].create(params)
   }
 
   /**
@@ -36,7 +36,7 @@ class Rotation extends Request {
    * @param params
    */
   update(id, params) {
-    return this.$strapi['$job-position-changes'].update(id, params)
+    return this.$strapi['job-positions'].update(id, params)
   }
 
   /**
@@ -46,8 +46,8 @@ class Rotation extends Request {
    */
   count(params) {
     const stringifyParams = qs.stringify({ ...params }, { encode: false })
-    return this.$strapi['$job-position-changes'].count(stringifyParams)
+    return this.$strapi['job-positions'].count(stringifyParams)
   }
 }
 
-module.exports = Rotation
+module.exports = JobPosition

@@ -7,6 +7,7 @@ import Document from '@/repositories/document'
 import Upload from '@/repositories/upload'
 import Rotation from '@/repositories/rotation'
 import License from '@/repositories/license'
+import JobPosition from '@/repositories/job-position'
 
 export default (ctx) => {
   const user = new User(ctx)
@@ -18,6 +19,7 @@ export default (ctx) => {
   const upload = new Upload(ctx)
   const rotation = new Rotation(ctx)
   const license = new License(ctx)
+  const jobPosition = new JobPosition(ctx)
 
   return {
     user,
@@ -29,5 +31,6 @@ export default (ctx) => {
     upload,
     rotation,
     license,
+    jobPosition,
   }
 }
