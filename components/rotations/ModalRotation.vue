@@ -17,9 +17,10 @@
                 :is-loading="isLoadingFetchWorkers"
                 :value="workerValue"
                 @typing="fetchWorkers"
-                @selected="(worker) => (form.worker = worker.id)"
+                @selected="selectedWorker"
               />
               <FormSelect
+                v-if="!isNew"
                 label="Puesto Origen:"
                 place-holder="Buscar por puesto"
                 :data="jobPositionFrom"
@@ -29,7 +30,7 @@
                 @selected="(position) => (form.job_position_from = position.id)"
               />
               <FormSelect
-                label="Puesto Origen:"
+                label="Puesto Destino:"
                 place-holder="Buscar por puesto"
                 :data="jobPositionTo"
                 :is-loading="false"
@@ -46,7 +47,9 @@
           </Wrapper>
           <template #footer>
             <div class="is-justify-content-flex-end">
-              <Button type="is-text" rounded @click="close"> Cancelar </Button>
+              <Button type="is-text" rounded @click="handleCancel">
+                {{ cancelButton }}
+              </Button>
               <Button
                 type="is-primary"
                 rounded
@@ -101,8 +104,14 @@ export default {
     }
   },
   computed: {
+    isNew() {
+      return !this.form.id
+    },
     title() {
       return this.form.id ? 'Modificar Rotación' : 'Registrar Rotación'
+    },
+    cancelButton() {
+      return this.form.id ? 'Eliminar Rotación' : 'Cancelar'
     },
     workerValue() {
       const worker = this.rotation && this.rotation.worker
@@ -147,6 +156,12 @@ export default {
       this.$emit('close')
       this.form = {}
     },
+    handleDelete() {
+      this.$emit('delete', this.form)
+    },
+    handleCancel() {
+      this.form.id ? this.handleDelete() : this.close()
+    },
     async fetchWorkers(searchText) {
       this.isLoadingFetchWorkers = true
       const filter = {
@@ -189,12 +204,27 @@ export default {
       const form = {
         ...this.form,
         worker: this.form.worker.id || this.form.worker,
-        job_position_from:
-          this.form.job_position_from.id || this.form.job_position_from,
+        job_position_from: this.form.job_position_from
+          ? this.form.job_position_from.id || this.form.job_position_from
+          : null,
         job_position_to:
           this.form.job_position_to.id || this.form.job_position_to,
       }
       this.$emit('submit', form)
+    },
+    selectedWorker(worker) {
+      if (this.isNew) {
+        this.form = {
+          ...this.form,
+          worker,
+          job_position_from: worker.job_position,
+        }
+      } else {
+        this.form = {
+          ...this.form,
+          worker,
+        }
+      }
     },
   },
 }

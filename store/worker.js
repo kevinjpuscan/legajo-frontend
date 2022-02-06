@@ -4,6 +4,9 @@ export const state = () => ({
     photo: {
       url: null,
     },
+    job_position: {
+      organizational_unit: {},
+    },
   },
 })
 export const mutations = {

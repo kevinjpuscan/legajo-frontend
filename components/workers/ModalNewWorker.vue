@@ -31,6 +31,19 @@
                 label="Apellidos:"
                 placeholder="Ingrese Apellidos"
               />
+              <FormInput
+                v-model="form.ruc"
+                rules="required"
+                type="text"
+                label="RUC:"
+                placeholder="Ingrese RUC"
+              />
+              <FormEnum
+                v-model="form.sex"
+                label="Sexo:"
+                :options="['Masculino', 'Femenino']"
+                @change="(val) => (form.sex = val)"
+              />
               <FormDatePicker
                 v-model="form.birth_date"
                 rules="required"
@@ -70,6 +83,7 @@ import Wrapper from '~/components/containers/Wrapper.vue'
 import Button from '~/components/shared/Button.vue'
 import FormInput from '~/components/Form/FormInput'
 import FormDatePicker from '~/components/Form/FormDatePicker'
+import FormEnum from '~/components/Form/FormEnum.vue'
 
 export default {
   components: {
@@ -93,6 +107,8 @@ export default {
         last_names: '',
         first_names: '',
         birth_date: '',
+        ruc: '',
+        sex: '',
       },
       active: this.value,
       confirmedModal: false,

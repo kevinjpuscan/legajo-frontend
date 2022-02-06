@@ -2,7 +2,7 @@
   <Wrapper>
     <section class="actions">
       <div>
-        <Button @click="toogleModalRotation">Agregar Rotación</Button>
+        <Button @click="handleCreate">Agregar Rotación</Button>
       </div>
       <div class="action-search">
         <b-input
@@ -26,7 +26,7 @@
       width="100%"
     >
       <b-table-column v-slot="props" label="Fecha">
-        {{ props.row.date_change }}
+        {{ props.row.date_change | dateFormat }}
       </b-table-column>
       <b-table-column v-slot="props" label="DNI">
         {{ props.row.worker.identification_number }}
@@ -38,11 +38,17 @@
         {{ props.row.worker.first_names | truncate(20) }}
       </b-table-column>
       <b-table-column v-slot="props" label="Puesto Origen">
-        {{ props.row.job_position_from.title | truncate(20) }}
+        {{
+          props.row.job_position_from
+            ? props.row.job_position_from.title
+            : 'EXTERNO' | truncate(20)
+        }}
       </b-table-column>
       <b-table-column v-slot="props" label="Unidad Origen">
         {{
-          props.row.job_position_from.organizational_unit.name | truncate(20)
+          props.row.job_position_from
+            ? props.row.job_position_from.organizational_unit.name
+            : 'EXTERNO' | truncate(20)
         }}
       </b-table-column>
       <b-table-column v-slot="props" label="Puesto Destino">
@@ -70,6 +76,7 @@
       :rotation="selected"
       @submit="handleSubmit"
       @close="toogleModalRotation"
+      @delete="handleDelete"
     />
     <ModalConfirmation
       :model="showModalConfirmation"
@@ -99,6 +106,9 @@ export default {
     truncate(value, length) {
       return value.length > length ? value.substr(0, length) + '...' : value
     },
+    dateFormat(value) {
+      return new Date(value).toLocaleDateString('en-US')
+    },
   },
   async fetch() {
     const { page, search } = this.$route.query
@@ -116,6 +126,7 @@ export default {
     rotation: {},
     isLoading: false,
     selected: null,
+    mode: '',
   }),
   computed: {
     filters() {
@@ -160,31 +171,48 @@ export default {
       return worker.job_position?.title
     },
     toogleModalRotation() {
-      if (this.showModalRotation) {
-        this.selected = null
-      }
       this.showModalRotation = !this.showModalRotation
     },
     toogleModalConfirmation() {
       this.showModalConfirmation = !this.showModalConfirmation
     },
+    handleCreate() {
+      this.selected = null
+      this.toogleModalRotation()
+    },
     handleSubmit(form) {
       this.rotation = form
+      this.mode = 'UPDATE-CREATE'
+      this.toogleModalConfirmation()
+    },
+    handleDelete(form) {
+      this.rotation = form
+      this.mode = 'DELETE'
       this.toogleModalConfirmation()
     },
     async resolveAction() {
       this.$store.commit('loading', true)
       try {
-        if (this.rotation.id) {
+        let message = ''
+        if (this.mode === 'DELETE') {
+          await this.$repository.rotation.delete(this.rotation.id)
+          message = 'Rotación eliminada correctamente'
+        }
+        if (this.rotation.id && this.mode === 'UPDATE-CREATE') {
           await this.$repository.rotation.update(
             this.rotation.id,
             this.rotation
           )
-        } else {
-          await this.$repository.rotation.create(this.rotation)
+          message = 'Rotación actualizada correctamente'
         }
+
+        if (!this.rotation.id && this.mode === 'UPDATE-CREATE') {
+          await this.$repository.rotation.create(this.rotation)
+          message = 'Rotación registrada correctamente'
+        }
+        this.mode = ''
         this.$buefy.toast.open({
-          message: 'Rotación registrado correctamente',
+          message,
           type: 'is-success',
           queue: false,
           duration: 3000,

@@ -8,10 +8,30 @@
           </div>
 
           <div class="information-list">
-            <Information />
-            <Information />
-            <Information />
-            <Information />
+            <Information
+              label="Apellidos:"
+              :value="this.$store.state.worker.worker.last_names"
+            />
+            <Information
+              label="Nombres:"
+              :value="this.$store.state.worker.worker.first_names"
+            />
+            <Information
+              label="Fecha de Nacimiento:"
+              :value="this.$store.state.worker.worker.birth_date | formatDate"
+            />
+            <Information
+              label="DNI:"
+              :value="this.$store.state.worker.worker.identification_number"
+            />
+            <Information
+              label="RUC:"
+              :value="this.$store.state.worker.worker.ruc"
+            />
+            <Information
+              label="Sexo:"
+              :value="this.$store.state.worker.worker.sex"
+            />
           </div>
         </div>
         <div class="information-group">
@@ -20,10 +40,21 @@
           </div>
 
           <div class="information-list">
-            <Information />
-            <Information />
-            <Information />
-            <Information />
+            <Information
+              label="Unidad Organizacional:"
+              :value="
+                this.$store.state.worker.worker.job_position &&
+                this.$store.state.worker.worker.job_position.organizational_unit
+                  .name
+              "
+            />
+            <Information
+              label="Puesto Laboral:"
+              :value="
+                this.$store.state.worker.worker.job_position &&
+                this.$store.state.worker.worker.job_position.title
+              "
+            />
           </div>
         </div>
       </section>
@@ -31,7 +62,10 @@
         <div class="worker-photo">
           <picture>
             <b-image
-              :src="this.$store.state.worker.worker.photo.url | fileUrl"
+              :src="
+                this.$store.state.worker.worker.photo &&
+                this.$store.state.worker.worker.photo.url | fileUrl
+              "
               alt="The Buefy Logo"
               ratio="1by1"
               :rounded="true"
@@ -42,6 +76,16 @@
           <Button :disabled="!isSaveImageActive" @click="saveImage"
             >Cambiar Photo</Button
           >
+          <div v-if="imageFile" class="tags">
+            <span class="tag is-primary">
+              {{ imageFile.name }}
+              <button
+                class="delete is-small"
+                type="button"
+                @click="deleteDropFile()"
+              ></button>
+            </span>
+          </div>
           <b-field>
             <b-upload v-model="imageFile" drag-drop>
               <section class="section">
@@ -54,10 +98,44 @@
               </section>
             </b-upload>
           </b-field>
-          <Button outlined>Descargar ANEXO 01</Button>
-          <Button outlined>Descargar ANEXO 02</Button>
-          <Button outlined>Descargar ANEXO 03</Button>
-          <Button outlined>Descargar ANEXO 04</Button>
+
+          <a
+            class="button is-primary is-outlined"
+            :href="
+              `/workers/report/1/${this.$store.state.worker.worker.id}`
+                | fileUrl
+            "
+            target="_blank"
+          >
+            Descargar ANEXO 1</a
+          >
+          <a
+            class="button is-primary is-outlined"
+            :href="
+              `/workers/report/2/${this.$store.state.worker.worker.id}`
+                | fileUrl
+            "
+            target="_blank"
+            >Descargar ANEXO 2</a
+          >
+          <a
+            class="button is-primary is-outlined"
+            :href="
+              `/workers/report/3/${this.$store.state.worker.worker.id}`
+                | fileUrl
+            "
+            target="_blank"
+            >Descargar ANEXO 3</a
+          >
+          <a
+            class="button is-primary is-outlined"
+            :href="
+              `/workers/report/4/${this.$store.state.worker.worker.id}`
+                | fileUrl
+            "
+            target="_blank"
+            >Descargar ANEXO 4</a
+          >
         </div>
       </section>
     </div>
@@ -102,6 +180,9 @@ export default {
       })
       this.imageFile = null
       await this.$store.dispatch('worker/fetchWorker', worker)
+    },
+    deleteDropFile() {
+      this.imageFile = null
     },
   },
 }

@@ -41,6 +41,15 @@ class Rotation extends Request {
 
   /**
    *
+   * @returns {Promise<unknown>}
+   * @param id
+   */
+  delete(id) {
+    return this.$strapi['$job-position-changes'].delete(id)
+  }
+
+  /**
+   *
    * @param {Object} params
    * @return {*}
    */

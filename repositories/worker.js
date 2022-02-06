@@ -11,6 +11,13 @@ class Worker extends Request {
     return this.$strapi.$http.$get(`/workers?${stringifyParams}`)
   }
 
+  async report(anexo, worker) {
+    const file = await this.$strapi.$http.$get(
+      `/workers/report/${anexo}/${worker}`
+    )
+    return file
+  }
+
   /**
    *
    * @param {int} id

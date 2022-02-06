@@ -8,6 +8,7 @@
         field="title"
         :loading="isLoading"
         icon="magnify"
+        :disabled="disabled"
         @typing="typing"
         @select="(option) => (selected = option)"
       >
@@ -42,6 +43,10 @@ export default {
     value: {
       type: String,
       default: '',
+    },
+    disabled: {
+      type: Boolean,
+      default: () => false,
     },
   },
   data() {

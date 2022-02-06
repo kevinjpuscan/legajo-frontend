@@ -147,17 +147,22 @@ export default {
       this.active = !this.active
       this.$emit('close')
       this.form = {}
+      this.files = []
     },
     async submit() {
       try {
-        const filesUploaded = await this.$repository.upload.create(this.files)
+        let documentFiles = []
+        if (this.files.lenth > 0) {
+          const filesUploaded = await this.$repository.upload.create(this.files)
+          documentFiles = filesUploaded.map((files) => files.id)
+        }
         const { worker } = this.$route.params
         const document = {
           worker,
           title: this.documentFactory.title,
           document_factory: this.documentFactory.id,
           information: this.form,
-          document_files: filesUploaded.map((files) => files.id),
+          document_files: documentFiles,
         }
         this.$emit('submit', document)
       } catch (error) {
