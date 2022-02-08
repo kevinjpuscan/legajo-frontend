@@ -3,8 +3,16 @@
     <div class="worker-profile">
       <section class="worker-information">
         <div class="information-group">
-          <div>
-            <h1>Información Personal</h1>
+          <div @click="toogleModalNewWorker">
+            <h1>
+              Información Personal
+              <b-icon
+                style="margin-left=1rem; color:gray;cursor:pointer;"
+                icon="account-edit-outline"
+                size="is-medium"
+              >
+              </b-icon>
+            </h1>
           </div>
 
           <div class="information-list">
@@ -31,6 +39,15 @@
             <Information
               label="Sexo:"
               :value="this.$store.state.worker.worker.sex"
+            />
+            <Information
+              label="Idiomas:"
+              :value="
+                this.$store.state.worker.worker.info &&
+                this.$store.state.worker.worker.info.languages
+                  ? this.$store.state.worker.worker.info.languages.join('-')
+                  : ''
+              "
             />
           </div>
         </div>
@@ -139,6 +156,22 @@
         </div>
       </section>
     </div>
+    <ModalNewWorker
+      :value="showModalNewWorker"
+      :worker="{
+        ...this.$store.state.worker.worker,
+        languages:
+          this.$store.state.worker.worker.info &&
+          this.$store.state.worker.worker.info.languages,
+      }"
+      @submit="submitNewWorker"
+      @close="toogleModalNewWorker"
+    />
+    <ModalConfirmation
+      :model="showModalConfirmation"
+      @resolve="resolveAction"
+      @reject="rejectAction"
+    />
   </Wrapper>
 </template>
 
@@ -147,6 +180,8 @@ import Wrapper from '~/components/containers/Wrapper.vue'
 import Information from '~/components/molecules/Information.vue'
 import Button from '~/components/shared/Button.vue'
 import CONFIG from '~/config/index'
+import ModalNewWorker from '~/components/workers/ModalNewWorker.vue'
+import ModalConfirmation from '~/components/shared/ModalConfirmation.vue'
 
 export default {
   layout: 'documents',
@@ -154,17 +189,20 @@ export default {
     Wrapper,
     Information,
     Button,
+    ModalNewWorker,
+    ModalConfirmation,
   },
   filters: {
     fileUrl(url) {
-      return url
-        ? `${CONFIG.strapiUrl}${url}`
-        : 'https://industrial.unmsm.edu.pe/wp-content/uploads/2015/03/foto-carnet1.jpg'
+      return url ? `${CONFIG.strapiUrl}${url}` : '/user.jpeg'
     },
   },
 
   data: () => ({
     imageFile: null,
+    showModalNewWorker: false,
+    showModalConfirmation: false,
+    newWorker: {},
   }),
   computed: {
     isSaveImageActive() {
@@ -183,6 +221,46 @@ export default {
     },
     deleteDropFile() {
       this.imageFile = null
+    },
+    toogleModalNewWorker() {
+      this.showModalNewWorker = !this.showModalNewWorker
+    },
+    toogleModalConfirmation() {
+      this.showModalConfirmation = !this.showModalConfirmation
+    },
+    submitNewWorker(form) {
+      this.newWorker = form
+      this.toogleModalConfirmation()
+    },
+    async resolveAction() {
+      this.$store.commit('loading', true)
+      try {
+        const worker = {
+          ...this.newWorker,
+          info: { ...this.newWorker.info, languages: this.newWorker.languages },
+        }
+        await this.$repository.worker.update(worker.id, worker)
+        this.$buefy.toast.open({
+          message: 'Servidor Público actualizado correctamente',
+          type: 'is-success',
+          queue: false,
+          duration: 3000,
+        })
+        this.toogleModalNewWorker()
+      } catch (e) {
+        this.$buefy.toast.open({
+          message: 'Ocurrió un error, verifique la información',
+          type: 'is-danger',
+        })
+      } finally {
+        this.$store.commit('loading', false)
+        const { worker } = this.$route.params
+        await this.$store.dispatch('worker/fetchWorker', worker)
+        this.toogleModalConfirmation()
+      }
+    },
+    rejectAction() {
+      this.toogleModalConfirmation()
     },
   },
 }

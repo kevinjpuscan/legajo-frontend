@@ -126,7 +126,11 @@ export default {
     async resolveAction() {
       this.$store.commit('loading', true)
       try {
-        await this.$repository.worker.create(this.newWorker)
+        const worker = {
+          ...this.newWorker,
+          info: { languages: this.newWorker.languages },
+        }
+        await this.$repository.worker.create(worker)
         this.$buefy.toast.open({
           message: 'Servidor Público registrado correctamente',
           type: 'is-success',

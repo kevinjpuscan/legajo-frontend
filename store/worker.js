@@ -7,6 +7,7 @@ export const state = () => ({
     job_position: {
       organizational_unit: {},
     },
+    info: {},
   },
 })
 export const mutations = {

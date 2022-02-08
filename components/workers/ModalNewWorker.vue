@@ -55,6 +55,13 @@
                 trap-focus
                 editable
               />
+              <FormList
+                v-model="form.languages"
+                :options="languageOptions"
+                label="Idiomas:"
+                @change="(val) => (form.languages = val)"
+                @typing="filterLanguages"
+              />
             </form>
           </Wrapper>
           <template #footer>
@@ -83,7 +90,7 @@ import Wrapper from '~/components/containers/Wrapper.vue'
 import Button from '~/components/shared/Button.vue'
 import FormInput from '~/components/Form/FormInput'
 import FormDatePicker from '~/components/Form/FormDatePicker'
-import FormEnum from '~/components/Form/FormEnum.vue'
+import FormList from '~/components/Form/FormList.vue'
 
 export default {
   components: {
@@ -93,11 +100,16 @@ export default {
     FormInput,
     FormDatePicker,
     ValidationObserver,
+    FormList,
   },
   props: {
     value: {
       type: Boolean,
       default: true,
+    },
+    worker: {
+      type: Object,
+      default: () => ({}),
     },
   },
   data() {
@@ -109,16 +121,22 @@ export default {
         birth_date: '',
         ruc: '',
         sex: '',
+        languages: [],
       },
       active: this.value,
       confirmedModal: false,
       isLoading: false,
+      languages: ['Español', 'Inglés', 'Frances'],
+      languageOptions: [],
     }
   },
   watch: {
     value() {
       this.active = this.value
-      this.form = {}
+      this.form = {
+        ...this.worker,
+        birth_date: new Date(this.worker.birth_date),
+      }
     },
   },
   methods: {
@@ -129,6 +147,11 @@ export default {
     },
     submit() {
       this.$emit('submit', this.form)
+    },
+    filterLanguages(val) {
+      this.languageOptions = this.languages.filter((language) =>
+        language.toString().toLowerCase().includes(val.toLowerCase())
+      )
     },
   },
 }

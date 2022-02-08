@@ -14,10 +14,12 @@
     >
       <b-taginput
         v-model="innerValue"
+        :data="options"
         ellipsis
         icon="label"
         placeholder="Nuevo"
         aria-close-label="Borrar"
+        @typing="handleTyping"
       >
       </b-taginput>
     </FormLabel>
@@ -43,9 +45,10 @@ export default {
       type: [Object, String],
       default: '',
     },
-    value: {
-      type: null,
-      default: null,
+    value: { type: Array, default: () => [] },
+    options: {
+      type: Array,
+      default: () => [],
     },
   },
   data: () => ({
@@ -70,6 +73,9 @@ export default {
   methods: {
     iconRightClick(event) {
       this.$emit('icon-right-click', event)
+    },
+    handleTyping(val) {
+      this.$emit('typing', val)
     },
   },
 }
