@@ -17,7 +17,7 @@ class License extends Request {
    * @returns {*}
    */
   findOne(id) {
-    return this.$strapi['work-licenses'].findOne(id)
+    return this.$strapi['$work-licenses'].findOne(id)
   }
 
   /**
@@ -26,7 +26,7 @@ class License extends Request {
    * @returns {params}
    */
   create(params) {
-    return this.$strapi['work-licenses'].create(params)
+    return this.$strapi['$work-licenses'].create(params)
   }
 
   /**
@@ -36,7 +36,16 @@ class License extends Request {
    * @param params
    */
   update(id, params) {
-    return this.$strapi['work-licenses'].update(id, params)
+    return this.$strapi['$work-licenses'].update(id, params)
+  }
+
+  /**
+   *
+   * @returns {Promise<unknown>}
+   * @param id
+   */
+  delete(id) {
+    return this.$strapi['$work-licenses'].delete(id)
   }
 
   /**
@@ -46,7 +55,7 @@ class License extends Request {
    */
   count(params) {
     const stringifyParams = qs.stringify({ ...params }, { encode: false })
-    return this.$strapi['work-licenses'].count(stringifyParams)
+    return this.$strapi['$work-licenses'].count(stringifyParams)
   }
 }
 

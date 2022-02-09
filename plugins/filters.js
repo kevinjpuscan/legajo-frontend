@@ -1,7 +1,7 @@
 import Vue from 'vue'
 Vue.filter('formatDate', (value) => {
   if (!value) return ''
-  return new Date(value).toLocaleDateString('en-US')
+  return new Date(value).toLocaleDateString('en-GB')
 })
 
 Vue.filter('capitalize', (word = '') => {

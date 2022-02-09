@@ -53,7 +53,7 @@ export default {
       'documents',
       'upload',
       'job-position-changes',
-      'work=licenses',
+      'work-licenses',
       'job-positions',
     ],
   },

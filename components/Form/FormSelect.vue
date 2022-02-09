@@ -11,6 +11,11 @@
         :disabled="disabled"
         @typing="typing"
         @select="(option) => (selected = option)"
+        @focus="
+          () => {
+            name = ''
+          }
+        "
       >
         <template slot-scope="props">
           <span>{{ props.option.title }}</span>

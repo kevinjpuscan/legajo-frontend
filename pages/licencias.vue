@@ -2,7 +2,7 @@
   <Wrapper>
     <section class="actions">
       <div>
-        <Button @click="toogleModalNewWorker">Agregar Licencia</Button>
+        <Button @click="toogleModalNewLicence">Agregar Licencia</Button>
       </div>
       <div class="action-search">
         <b-input
@@ -22,6 +22,7 @@
       :hoverable="true"
       :bordered="true"
       :loading="isLoading"
+      :selected.sync="selected"
       width="100%"
     >
       <b-table-column v-slot="props" label="Tipo">
@@ -36,20 +37,23 @@
       <b-table-column v-slot="props" label="Nombres">
         {{ props.row.worker.first_names | truncate(20) }}
       </b-table-column>
-      <b-table-column v-slot="props" label="Unidad Origen">
-        {{ props.row.organizational_unit.name | truncate(20) }}
+      <b-table-column v-slot="props" label="Unidad Organizacional">
+        {{
+          (props.row.organizational_unit &&
+            props.row.organizational_unit.name) ||
+          '' | truncate(20)
+        }}
       </b-table-column>
       <b-table-column v-slot="props" label="Desde">
-        {{ props.row.date_start | truncate(20) }}
+        {{ props.row.date_start | formatDate }}
       </b-table-column>
       <b-table-column v-slot="props" label="Hasta">
-        {{ props.row.date_end | truncate(20) }}
+        {{ props.row.date_end | formatDate }}
       </b-table-column>
       <b-table-column v-slot="props" label="Estado">
-        {{ props.row.status | truncate(20) }}
-      </b-table-column>
-      <b-table-column v-slot="props" label="Acciones">
-        {{ props.row.id }}
+        <b-tag :type="props.row.status | tagType" size="is-medium">{{
+          props.row.status | truncate(20)
+        }}</b-tag>
       </b-table-column>
       <template #empty>
         <div class="has-text-centered">No se encontraron licencias</div>
@@ -65,10 +69,12 @@
       />
     </section>
 
-    <ModalNewWorker
-      :value="showModalNewWorker"
-      @submit="submitNewWorker"
-      @close="toogleModalNewWorker"
+    <ModalNewLicence
+      :value="showModalNewLicence"
+      :selected="selected"
+      @submit="submitNewLicence"
+      @close="toogleModalNewLicence"
+      @delete="handleDelete"
     />
     <ModalConfirmation
       :model="showModalConfirmation"
@@ -81,7 +87,7 @@
 <script>
 import Wrapper from '~/components/containers/Wrapper.vue'
 import Button from '~/components/shared/Button.vue'
-import ModalNewWorker from '~/components/workers/ModalNewWorker.vue'
+import ModalNewLicence from '~/components/licences/ModalNewLicence.vue'
 import ModalConfirmation from '~/components/shared/ModalConfirmation.vue'
 import Pagination from '~/components/shared/Pagination.vue'
 export default {
@@ -90,13 +96,28 @@ export default {
   components: {
     Wrapper,
     Button,
-    ModalNewWorker,
+    ModalNewLicence,
     ModalConfirmation,
     Pagination,
   },
   filters: {
     truncate(value, length) {
       return value.length > length ? value.substr(0, length) + '...' : value
+    },
+    tagType(val) {
+      if (val === 'EN_CURSO') {
+        return 'is-success'
+      }
+      if (val === 'PENDIENTE') {
+        return 'is-warning'
+      }
+      if (val === 'FINALIZADA') {
+        return 'is-light'
+      }
+      if (val === 'CANCELADA') {
+        return 'is-dark'
+      }
+      return 'is-info'
     },
   },
   async fetch() {
@@ -110,10 +131,12 @@ export default {
     searchText: '',
     currentPage: 1,
     perPage: 10,
-    showModalNewWorker: false,
+    showModalNewLicence: false,
     showModalConfirmation: false,
-    newWorker: {},
+    newLicence: {},
     isLoading: false,
+    selected: null,
+    mode: '',
   }),
   computed: {
     filters() {
@@ -133,6 +156,11 @@ export default {
     async searchText() {
       await this.fetchWorkLicenses()
     },
+    selected(val) {
+      if (val) {
+        this.toogleModalNewLicence()
+      }
+    },
   },
   methods: {
     async fetchWorkLicenses() {
@@ -146,27 +174,50 @@ export default {
     jobPosition(worker) {
       return worker.job_position?.title
     },
-    toogleModalNewWorker() {
-      this.showModalNewWorker = !this.showModalNewWorker
+    toogleModalNewLicence() {
+      this.showModalNewLicence = !this.showModalNewLicence
     },
     toogleModalConfirmation() {
       this.showModalConfirmation = !this.showModalConfirmation
     },
-    submitNewWorker(form) {
-      this.newWorker = form
+    submitNewLicence(form) {
+      this.newLicence = form
+      this.mode = 'UPDATE-CREATE'
+      this.toogleModalConfirmation()
+    },
+    handleDelete(form) {
+      this.newLicence = form
+      this.mode = 'DELETE'
       this.toogleModalConfirmation()
     },
     async resolveAction() {
       this.$store.commit('loading', true)
       try {
-        await this.$repository.worker.create(this.newWorker)
+        let message = ''
+        if (this.mode === 'DELETE') {
+          await this.$repository.license.delete(this.newLicence.id)
+          message = 'Rotación eliminada correctamente'
+        }
+        if (this.newLicence.id && this.mode === 'UPDATE-CREATE') {
+          await this.$repository.license.update(
+            this.newLicence.id,
+            this.newLicence
+          )
+          message = 'Rotación actualizada correctamente'
+        }
+
+        if (!this.newLicence.id && this.mode === 'UPDATE-CREATE') {
+          await this.$repository.license.create(this.newLicence)
+          message = 'Rotación registrada correctamente'
+        }
+        this.mode = ''
         this.$buefy.toast.open({
-          message: 'Servidor Público registrado correctamente',
+          message,
           type: 'is-success',
           queue: false,
           duration: 3000,
         })
-        this.toogleModalNewWorker()
+        this.toogleModalNewLicence()
       } catch (e) {
         this.$buefy.toast.open({
           message: 'Ocurrió un error, verifique la información',
