@@ -55,6 +55,8 @@ export default {
       'job-position-changes',
       'work-licenses',
       'job-positions',
+      'salaries',
+      'salary-concepts',
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
