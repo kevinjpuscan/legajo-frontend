@@ -1,21 +1,19 @@
 <template>
   <div>
-    <div class="card-content">
-      <div class="content">
-        <span class="button is-success is-light" @click="handleNew">
-          Agregar concepto
-        </span>
-        <ul>
-          <li v-for="(concept, index) in concepts" :key="index">
-            {{ concept.concept }} | S./{{ concept.amount }}
-            <span
-              class="delete"
-              aria-label="delete"
-              @click="handleDelete(index)"
-            ></span>
-          </li>
-        </ul>
-      </div>
+    <div class="content">
+      <span class="button is-success is-light" @click="handleNew">
+        Agregar concepto
+      </span>
+      <ul>
+        <li v-for="(concept, index) in concepts" :key="index">
+          {{ concept.concept }} | S./{{ concept.amount }}
+          <span
+            class="delete"
+            aria-label="delete"
+            @click="handleDelete(index)"
+          ></span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>

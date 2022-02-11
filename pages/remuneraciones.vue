@@ -54,7 +54,10 @@
         {{ props.row.date_end | formatDate }}
       </b-table-column>
       <b-table-column v-slot="props" label="Total:">
-        {{ props.row.total_amount }}
+        S./ {{ props.row.total_amount }}
+      </b-table-column>
+      <b-table-column v-slot="props" label="Bono:">
+        S./ {{ props.row.bonus ? props.row.bonus.amount : 0 }}
       </b-table-column>
 
       <template #empty>
@@ -75,7 +78,11 @@
       :value="showModalSalary"
       :selected="selected"
       @submit="submitSalary"
-      @close="toogleModalSalary"
+      @close="
+        () => {
+          ;(selected = null), toogleModalSalary()
+        }
+      "
       @delete="handleDelete"
     />
     <ModalConfirmation

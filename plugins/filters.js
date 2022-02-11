@@ -1,4 +1,11 @@
 import Vue from 'vue'
+import CONFIG from '~/config/index'
+
+Vue.filter('fileUrl', (value) => {
+  if (!value) return ''
+  return `${CONFIG.strapiUrl}${value}`
+})
+
 Vue.filter('formatDate', (value) => {
   if (!value) return ''
   return new Date(value).toLocaleDateString('en-GB')

@@ -152,7 +152,7 @@ export default {
     async submit() {
       try {
         let documentFiles = []
-        if (this.files.lenth > 0) {
+        if (this.files.length > 0) {
           const filesUploaded = await this.$repository.upload.create(this.files)
           documentFiles = filesUploaded.map((files) => files.id)
         }
@@ -164,6 +164,7 @@ export default {
           information: this.form,
           document_files: documentFiles,
         }
+        this.files = []
         this.$emit('submit', document)
       } catch (error) {
         this.$buefy.toast.open({

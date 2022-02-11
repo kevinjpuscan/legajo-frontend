@@ -75,7 +75,12 @@
       :value="showModalRotation"
       :rotation="selected"
       @submit="handleSubmit"
-      @close="toogleModalRotation"
+      @close="
+        () => {
+          selected = null
+          toogleModalRotation()
+        }
+      "
       @delete="handleDelete"
     />
     <ModalConfirmation

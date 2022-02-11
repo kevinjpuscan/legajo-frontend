@@ -14,13 +14,7 @@
 </template>
 
 <script>
-import CONFIG from '~/config/index'
 export default {
-  filters: {
-    fileUrl(url) {
-      return `${CONFIG.strapiUrl}${url}`
-    },
-  },
   props: {
     files: { type: Array, default: () => [] },
   },

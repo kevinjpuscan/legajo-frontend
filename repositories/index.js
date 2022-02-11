@@ -10,6 +10,7 @@ import License from '@/repositories/license'
 import JobPosition from '@/repositories/job-position'
 import Salary from '@/repositories/salary'
 import SalaryConcept from '@/repositories/salary-concept'
+import Bonus from '@/repositories/bonus'
 
 export default (ctx) => {
   const user = new User(ctx)
@@ -24,6 +25,7 @@ export default (ctx) => {
   const jobPosition = new JobPosition(ctx)
   const salary = new Salary(ctx)
   const salaryConcept = new SalaryConcept(ctx)
+  const bonus = new Bonus(ctx)
 
   return {
     user,
@@ -38,5 +40,6 @@ export default (ctx) => {
     jobPosition,
     salary,
     salaryConcept,
+    bonus,
   }
 }

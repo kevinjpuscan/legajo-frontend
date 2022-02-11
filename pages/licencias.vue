@@ -73,7 +73,12 @@
       :value="showModalNewLicence"
       :selected="selected"
       @submit="submitNewLicence"
-      @close="toogleModalNewLicence"
+      @close="
+        () => {
+          selected = null
+          toogleModalNewLicence()
+        }
+      "
       @delete="handleDelete"
     />
     <ModalConfirmation

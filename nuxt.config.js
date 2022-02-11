@@ -57,6 +57,7 @@ export default {
       'job-positions',
       'salaries',
       'salary-concepts',
+      'bonuses',
     ],
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build

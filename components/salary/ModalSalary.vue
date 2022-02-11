@@ -57,6 +57,64 @@
                   @remove="handleRemoveConcept"
                 />
               </b-field>
+              <b-field v-if="form.worker" label="Bono Temporal:">
+                <div class="bono_detail">
+                  <div v-if="!!form.bonus">
+                    <div class="card">
+                      <div
+                        class="card-header"
+                        style="display: flex; justify-content: flex-end"
+                      >
+                        <div style="padding: 0.3rem">
+                          <span
+                            class="delete"
+                            aria-label="delete"
+                            @click="() => (form.bonus = null)"
+                          ></span>
+                        </div>
+                      </div>
+                      <div class="card-content">
+                        <div class="content">
+                          <div>
+                            <strong>Monto:</strong>
+                            <span>S./ {{ form.bonus.amount }}</span>
+                          </div>
+                          <div>
+                            <strong>Desde:</strong>
+                            <span>{{
+                              form.bonus.date_start | formatDate
+                            }}</span>
+                          </div>
+                          <div>
+                            <strong>Hasta:</strong>
+                            <span>{{ form.bonus.date_end | formatDate }}</span>
+                          </div>
+                          <div>
+                            <a
+                              target="_blank"
+                              :href="form.bonus.document_url | fileUrl"
+                              >Documento de Bono</a
+                            >
+                          </div>
+                          <div>
+                            <b-tag
+                              :type="form.bonus.state | tagType"
+                              size="is-small"
+                              >{{ form.bonus.state }}</b-tag
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    v-if="!form.bonus"
+                    class="button is-success is-light"
+                    @click="toogleModalNewBonus"
+                    >Agregar Bono</span
+                  >
+                </div>
+              </b-field>
             </form>
           </Wrapper>
           <template #footer>
@@ -82,6 +140,12 @@
       @submit="submitConcept"
       @close="toogleModalNewConcept"
     />
+    <ModalNewBonus
+      :value="showModalBonus"
+      :worker-id="form.worker"
+      @submit="submitBonus"
+      @close="toogleModalNewBonus"
+    />
   </div>
 </template>
 
@@ -94,6 +158,7 @@ import FormDatePicker from '~/components/Form/FormDatePicker'
 import FormSelect from '~/components/Form/FormSelect.vue'
 import ModalNewConcept from '~/components/salary/ModalNewConcept.vue'
 import ConceptList from '~/components/salary/ConceptList.vue'
+import ModalNewBonus from '~/components/salary/ModalNewBonus.vue'
 
 export default {
   components: {
@@ -105,6 +170,18 @@ export default {
     FormSelect,
     ModalNewConcept,
     ConceptList,
+    ModalNewBonus,
+  },
+  filters: {
+    tagType(val) {
+      if (val === 'ACTIVO') {
+        return 'is-success'
+      }
+      if (val === 'INACTIVO') {
+        return 'is-danger'
+      }
+      return 'is-info'
+    },
   },
   props: {
     value: {
@@ -125,7 +202,7 @@ export default {
         worker: null,
         date_start: new Date(),
         date_end: new Date(),
-        bonus: {},
+        bonus: null,
       },
       active: this.value,
       confirmedModal: false,
@@ -134,6 +211,7 @@ export default {
       workers: [],
       isLoadingFetchWorkers: false,
       showModalNewConcept: false,
+      showModalBonus: false,
     }
   },
   computed: {
@@ -154,7 +232,7 @@ export default {
         worker: null,
         date_start: new Date(),
         date_end: new Date(),
-        bonus: {},
+        bonus: null,
       }
     },
     selectedWorker(val) {
@@ -240,11 +318,28 @@ export default {
         })
       }
     },
+    async submitBonus(form) {
+      this.$store.commit('loading', true)
+      try {
+        const bonus = await this.$repository.bonus.create(form)
+        console.log(bonus)
+        this.form.bonus = bonus
+        this.toogleModalNewBonus()
+      } catch (e) {
+        this.$buefy.toast.open({
+          message: 'Ocurrió un error, verifique la información',
+          type: 'is-danger',
+        })
+      }
+    },
     toogleModalNewConcept() {
       this.showModalNewConcept = !this.showModalNewConcept
     },
     handleRemoveConcept(idx) {
       this.form.salary_concepts.splice(idx, 1)
+    },
+    toogleModalNewBonus() {
+      this.showModalBonus = !this.showModalBonus
     },
   },
 }
