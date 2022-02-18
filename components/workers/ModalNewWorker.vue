@@ -52,7 +52,6 @@
                 placeholder="Ej. 20/02/1990"
                 icon="calendar-today"
                 :max-date="new Date()"
-                trap-focus
                 editable
               />
               <FormList

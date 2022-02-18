@@ -31,7 +31,6 @@
           :document-factory="documentFactory"
           :handle-click="handleClickDocument"
         />
-        {{ documentFactory.slug }} / {{ documentFactory.id }}
       </div>
     </div>
     <div class="modals">

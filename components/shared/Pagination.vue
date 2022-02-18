@@ -22,7 +22,7 @@ export default {
     },
     routeBase: {
       type: String,
-      default: "",
+      default: '',
     },
     hasMoreNext: {
       type: Boolean,
@@ -37,13 +37,13 @@ export default {
     nextRoute() {
       return `${this.routeBase}${
         this.hasMoreNext ? this.currentPage + 1 : this.currentPage
-      }`;
+      }`
     },
     prevRoute() {
       return `${this.routeBase}${
         this.hasMorePreview ? this.currentPage - 1 : this.currentPage
-      }`;
+      }`
     },
   },
-};
+}
 </script>

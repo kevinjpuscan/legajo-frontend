@@ -11,6 +11,8 @@ import JobPosition from '@/repositories/job-position'
 import Salary from '@/repositories/salary'
 import SalaryConcept from '@/repositories/salary-concept'
 import Bonus from '@/repositories/bonus'
+import Report from '@/repositories/reports'
+import ReportGroup from '@/repositories/report-group'
 
 export default (ctx) => {
   const user = new User(ctx)
@@ -26,6 +28,8 @@ export default (ctx) => {
   const salary = new Salary(ctx)
   const salaryConcept = new SalaryConcept(ctx)
   const bonus = new Bonus(ctx)
+  const report = new Report(ctx)
+  const reportGroup = new ReportGroup(ctx)
 
   return {
     user,
@@ -41,5 +45,7 @@ export default (ctx) => {
     salary,
     salaryConcept,
     bonus,
+    report,
+    reportGroup,
   }
 }
