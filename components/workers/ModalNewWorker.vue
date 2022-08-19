@@ -45,7 +45,7 @@
                 @change="(val) => (form.sex = val)"
               />
               <FormDatePicker
-                v-model="birth_date"
+                v-model="form.birth_date"
                 rules="required"
                 label="Fecha Nacimiento:"
                 locale="es"
@@ -117,11 +117,11 @@ export default {
         identification_number: '',
         last_names: '',
         first_names: '',
+        birth_date: null,
         ruc: '',
         sex: '',
         languages: [],
       },
-      birth_date: null,
       active: this.value,
       confirmedModal: false,
       isLoading: false,
@@ -134,8 +134,10 @@ export default {
       this.active = this.value
       this.form = {
         ...this.worker,
+        birth_date: this.worker.birth_date
+          ? new Date(this.worker.birth_date)
+          : null,
       }
-      this.birth_date = new Date(this.worker.birth_date)
     },
   },
   methods: {
@@ -145,7 +147,7 @@ export default {
       this.form = {}
     },
     submit() {
-      this.$emit('submit', { ...this.form, birth_date: this.birth_date })
+      this.$emit('submit', this.form)
     },
     filterLanguages(val) {
       this.languageOptions = this.languages.filter((language) =>
