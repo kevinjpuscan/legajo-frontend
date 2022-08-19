@@ -15,7 +15,8 @@
         <b-navbar-item
           v-for="(item, index) in items"
           :key="index"
-          :href="item.to.name"
+          tag="router-link"
+          :to="{ path: item.to.name }"
         >
           {{ item.title }}
         </b-navbar-item>
